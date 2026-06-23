@@ -386,32 +386,26 @@
 </head>
 <body>
 
-    <!-- HEADER -->
     <header>
         <div class="brand"><span class="brand-leaf">🌿</span> Thực Đơn</div>
         <button class="header-search-btn" onclick="openSearch()"><i class="fas fa-search"></i></button>
     </header>
 
-    <!-- HERO -->
     <div class="hero-banner">
         <div class="hero-ribbon">MENU</div>
         <div class="hero-sub">Thức uống & Đồ ăn</div>
         <div class="hero-deco">🌸 🍃 🌼</div>
     </div>
 
-    <!-- CATEGORY NAV -->
     <nav class="category-nav" id="catNav"></nav>
 
-    <!-- MENU CONTENT -->
     <main id="menu-container"></main>
 
-    <!-- FOOTER -->
     <div class="menu-footer">
         <span class="menu-footer-icon">☕</span>
         Cảm ơn bạn đã ghé thăm
     </div>
 
-    <!-- MODAL -->
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="modal-content" id="itemModal">
         <div class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></div>
@@ -430,7 +424,6 @@
         </div>
     </div>
 
-    <!-- SEARCH OVERLAY -->
     <div class="search-overlay" id="searchOverlay">
         <div class="search-bar-wrap">
             <i class="fas fa-search" style="color:var(--text-sub);font-size:0.9rem;"></i>
@@ -449,36 +442,47 @@
         const menuData = [
             { id: 'cafe', title: 'Cafe', icon: '☕', items: [
                 { name: 'Đen đá / nóng', price: 20000, icon: '☕', shortDesc: 'Cà phê nguyên chất, đậm vị.', fullDesc: 'Hương vị cà phê nguyên bản, rang xay mộc mạc mang đến sự tỉnh táo tức thì. Phù hợp cho những ai yêu thích vị đắng truyền thống đặc trưng của hạt Robusta.', img: 'menu/den_da.png' },
-                { name: 'Sữa đá / nóng', price: 20000, icon: '☕', shortDesc: 'Cà phê hòa quyện sữa béo.', fullDesc: 'Sự kết hợp hoàn hảo giữa cốt cà phê pha phin thơm nồng và lớp sữa đặc béo ngậy. Thức uống kinh điển đậm đà của người Việt.', img: 'menu/nau_da.png' },
-                { name: 'Bạc xỉu', price: 25000, icon: '🥛', shortDesc: 'Sữa tươi thơm béo, ít cà phê.', fullDesc: 'Nhiều sữa béo hơn, chỉ điểm một chút cà phê cốt, thích hợp cho người yêu vị ngọt dịu và hương thơm cà phê nhẹ nhàng tinh tế.', img: '' },
-                { name: 'Cà phê muối', price: 25000, icon: '🧂', shortDesc: 'Vị mặn ngọt béo độc đáo.', fullDesc: 'Lớp kem mặn béo ngậy mịn màng phía trên hòa quyện cùng vị đắng nhẹ của cà phê bên dưới tạo nên một trải nghiệm vị giác đầy bùng nổ và lôi cuốn.', img: '' },
-                { name: 'Cà phê cốt dừa', price: 30000, icon: '🥥', shortDesc: 'Cà phê pha cốt dừa xay đá.', fullDesc: 'Cốt dừa được xay mịn với đá tạo độ xốp mượt, kết hợp với dòng cà phê đậm đà. Thức uống lạ miệng, mát lạnh và cực kỳ thơm mùi dừa.', img: '' }
+                { name: 'Nâu đá / nóng', price: 25000, icon: '☕', shortDesc: 'Cà phê hòa quyện sữa béo.', fullDesc: 'Sự kết hợp hoàn hảo giữa cốt cà phê pha phin thơm nồng và lớp sữa đặc béo ngậy. Thức uống kinh điển đậm đà truyền thống.', img: 'menu/nau_da.png' },
+                { name: 'Bạc xỉu', price: 30000, icon: '🥛', shortDesc: 'Sữa tươi thơm béo, ít cà phê.', fullDesc: 'Nhiều sữa béo hơn, chỉ điểm một chút cà phê cốt, thích hợp cho người yêu vị ngọt dịu và hương thơm cà phê nhẹ nhàng tinh tế.', img: '' },
+                { name: 'Cà phê muối', price: 30000, icon: '🧂', shortDesc: 'Vị mặn ngọt béo độc đáo.', fullDesc: 'Lớp kem mặn béo ngậy mịn màng phía trên hòa quyện cùng vị đắng nhẹ của cà phê bên dưới tạo nên một trải nghiệm vị giác bùng nổ.', img: '' },
+                { name: 'Cà phê cốt dừa', price: 30000, icon: '🥥', shortDesc: 'Cà phê pha cốt dừa xay đá.', fullDesc: 'Cốt dừa được xay mịn với đá tạo độ xốp mượt, kết hợp với dòng cà phê đậm đà. Thức uống lạ miệng, mát lạnh và thơm ngậy.', img: '' }
             ]},
             { id: 'tra', title: 'Trà', icon: '🍵', items: [
-                { name: 'Trà trái cây', price: 20000, icon: '🍓', shortDesc: 'Hương vị trái cây tươi mát.', fullDesc: 'Hòa quyện của nhiều loại trái cây tươi ngâm cùng cốt trà, mang lại vị ngọt thanh tự nhiên và màu sắc bắt mắt đầy hấp dẫn.', img: '' },
-                { name: 'Trà đào cam xả', price: 20000, icon: '🍑', shortDesc: 'Sự kết hợp hoàn hảo.', fullDesc: 'Sự hòa quyện tuyệt vời giữa vị đào ngọt mọng, cam tươi chua nhẹ và hương sả nồng ấm kích thích hoàn hảo mọi giác quan.', img: '' },
-                { name: 'Trà chanh', price: 10000, icon: '🍋', shortDesc: 'Chua ngọt sảng khoái.', fullDesc: 'Vị chanh tươi mát hòa quyện cùng cốt trà đen ủ đậm vị, mang lại cảm giác sảng khoái, giải khát tức thì.', img: '' },
-                { name: 'Trà chanh nha đam', price: 15000, icon: '🪴', shortDesc: 'Trà chanh kèm nha đam giòn.', fullDesc: 'Sự nâng cấp tuyệt vời của trà chanh truyền thống với topping nha đam cắt lựu giòn sần sật nhai cực vui miệng.', img: '' },
-                { name: 'Trà tắc', price: 10000, icon: '🍊', shortDesc: 'Thơm lừng hương quất tươi.', fullDesc: 'Sử dụng quả quất tươi vắt trực tiếp mang lại mùi thơm tinh dầu đặc trưng ở vỏ, vị chua ngọt hài hòa dễ chịu.', img: '' }
+                { name: 'Trà bí đao hạt chia', price: 15000, icon: '🥤', shortDesc: 'Thanh mát, giải nhiệt tự nhiên.', fullDesc: 'Vị ngọt thanh tự nhiên từ bí đao nguyên chất kết hợp cùng hạt chia bổ dưỡng, mang lại cảm giác nhẹ nhàng, giải nhiệt cơ thể hiệu quả.', img: '' },
+                { name: 'Trà chanh', price: 15000, icon: '🍋‍🟩', shortDesc: 'Chua ngọt sảng khoái.', fullDesc: 'Vị chanh tươi mát hòa quyện cùng cốt trà đen ủ đậm vị, mang lại cảm giác sảng khoái, giải khát tức thì trong những ngày oi bức.', img: '' },
+                { name: 'Trà chanh nha đam', price: 20000, icon: '🪴', shortDesc: 'Trà chanh kèm nha đam giòn.', fullDesc: 'Sự nâng cấp tuyệt vời của trà chanh truyền thống với topping nha đam cắt hạt lựu giòn sần sật nhai cực kỳ vui miệng.', img: '' },
+                { name: 'Trà quất', price: 15000, icon: '🍊', shortDesc: 'Thơm lừng hương quất tươi.', fullDesc: 'Sử dụng quả quất tươi vắt trực tiếp mang lại mùi thơm tinh dầu đặc trưng ở vỏ, vị chua ngọt hài hòa rất dễ chịu.', img: '' },
+                { name: 'Trà quất nha đam', price: 20000, icon: '🪴', shortDesc: 'Quất thơm kèm nha đam thanh mát.', fullDesc: 'Nước cốt quất chua ngọt thơm nồng, nhấn nhá thêm những viên nha đam thanh mát, mọng nước, tạo nên một thức uống cân bằng.', img: '' },
+                { name: 'Trà đào', price: 15000, icon: '🍑', shortDesc: 'Hương vị đào ngọt mọng dịu dàng.', fullDesc: 'Cốt trà thơm nhẹ kết hợp với hương vị đào chín mọng thanh lịch, đem đến cảm giác thư thái ngọt ngào.', img: '' },
+                { name: 'Trà đào cam sả', price: 25000, icon: '🍑', shortDesc: 'Sự kết hợp hoàn hảo kinh điển.', fullDesc: 'Sự hòa quyện tuyệt vời giữa vị đào ngọt mọng, cam tươi chua nhẹ và hương sả nồng ấm kích thích hoàn hảo mọi giác quan.', img: '' },
+                { name: 'Trà xoài chanh leo', price: 25000, icon: '🥭', shortDesc: 'Chua ngọt nhiệt đới bùng nổ.', fullDesc: 'Hương xoài chín thơm ngọt lịm đan xen hoàn hảo với vị chua thanh đặc trưng từ chanh leo tươi nguyên chất, đem lại vị mát sảng khoái.', img: '' },
+                { name: 'Trà mãng cầu', price: 25000, icon: '🍈', shortDesc: 'Vị ngọt dịu chua thanh lạ miệng.', fullDesc: 'Mãng cầu xiêm tươi được dầm vừa chín tới, hòa quyện với nước cốt trà thơm nhẹ tạo nên hương vị chua chua ngọt ngọt cuốn hút khó cưỡng.', img: '' }
+            ]},
+            { id: 'tranong', title: 'Trà Nóng', icon: '🫖', items: [
+                { name: 'Trà gừng táo đỏ', price: 25000, icon: '🫖', shortDesc: 'Ấm áp, bổ dưỡng và thư giãn.', fullDesc: 'Sự kết hợp hoàn hảo giữa vị cay ấm nồng của gừng già tươi và vị ngọt thanh đậm đà của táo đỏ, giúp giữ ấm và nuôi dưỡng cơ thể tốt.', img: '' },
+                { name: 'Trà gừng chanh sả', price: 25000, icon: '🫖', shortDesc: 'Thơm nồng sả gừng, giải cảm.', fullDesc: 'Hương sả thơm ngút ngàn hòa cùng gừng ấm áp và chút vị chua thanh dịu từ chanh tươi, mang lại sự nhẹ nhàng thư thái cho tinh thần.', img: '' },
+                { name: 'Trà đào cam sả nóng', price: 25000, icon: '🍑', shortDesc: 'Đào cam sả phiên bản ấm áp.', fullDesc: 'Thức uống kinh điển được phục vụ ở phiên bản ấm nóng, làm dậy mùi tinh dầu sả tươi và cam mọng, giúp thư giãn cổ họng.', img: '' },
+                { name: 'Trà quất mật ong', price: 25000, icon: '🍯', shortDesc: 'Dịu giọng, ngọt ngào thơm ngát.', fullDesc: 'Sự hòa quyện tinh tế giữa mật ong rừng tự nhiên ngọt hậu và nước cốt quất tươi thơm lừng, một thức uống vô cùng ấm áp tốt cho sức khỏe.', img: '' }
             ]},
             { id: 'nuocep', title: 'Nước Ép', icon: '🥤', items: [
-                { name: 'Nước ép dưa hấu', price: 30000, icon: '🍉', shortDesc: 'Giải nhiệt mùa hè.', fullDesc: 'Nước ép dưa hấu đỏ au tự nhiên, mát lạnh ngọt lịm tê đầu lưỡi. Thức uống hoàn hảo để đánh bay cơn khát oi bức.', img: '' },
-                { name: 'Nước ép dứa (mix cà rốt)', price: 30000, icon: '🍍', shortDesc: 'Hương vị hòa quyện.', fullDesc: 'Vị chua ngọt dịu của dứa tươi sẽ khéo léo làm át đi mùi hăng nhẹ của cà rốt, tạo ra một ly nước ép hỗn hợp cực kỳ dễ uống.', img: '' },
-                { name: 'Nước ép cam (mix cà rốt)', price: 30000, icon: '🍊', shortDesc: 'Mix vị sáng mắt đẹp da.', fullDesc: 'Sự kết hợp hoàn hảo cung cấp lượng lớn Vitamin A và C cho cơ thể. Rất tốt cho sức khỏe tổng thể, giúp sáng mắt và đẹp da.', img: '' },
-                { name: 'Nước ép táo (mix cà rốt)', price: 30000, icon: '🍎', shortDesc: 'Ngọt mát bổ dưỡng.', fullDesc: 'Táo tươi ép cùng cà rốt tạo nên hỗn hợp vitamin phong phú, vị ngọt tự nhiên dịu nhẹ, rất tốt cho tiêu hóa và làn da.', img: '' }
-            ]},
-            { id: 'matcha', title: 'Matcha', icon: '🍃', items: [
-                { name: 'Matcha latte', price: 25000, icon: '🍵', shortDesc: 'Matcha và sữa tươi.', fullDesc: 'Sự kết hợp phân tầng đẹp mắt giữa sữa tươi nguyên chất thanh trùng và lớp trà matcha Nhật Bản thơm nồng, không dùng bột béo.', img: '' },
-                { name: 'Matcha kem muối', price: 25000, icon: '🍵', shortDesc: 'Matcha kèm kem mặn béo.', fullDesc: 'Lục trà cao cấp kết hợp bột matcha nguyên chất, phủ phía trên là một lớp kem béo ngậy hơi mằn mặn đầy lôi cuốn.', img: '' },
-                { name: 'Matcha latte dâu', price: 25000, icon: '🍓', shortDesc: 'Matcha hòa quyện dâu tươi.', fullDesc: 'Phiên bản đặc biệt của matcha latte với topping dâu tươi thái lát và sốt dâu đỏ au, vừa ngon vừa đẹp mắt cho những tấm ảnh lung linh.', img: '' },
-                { name: 'Coco matcha dừa non', price: 30000, icon: '🥥', shortDesc: 'Matcha cốt dừa mát lạnh.', fullDesc: 'Sự kết hợp độc đáo giữa matcha xanh mát và cốt nước dừa non thanh ngọt, tạo ra thức uống vừa mát lạnh vừa thơm hương nhiệt đới.', img: '' }
+                { name: 'Nước ép dứa', price: 25000, icon: '🍍', shortDesc: 'Chua ngọt thanh mát tự nhiên.', fullDesc: 'Nước ép nguyên chất từ quả dứa chín mọng, cung cấp nguồn năng lượng tươi mát dồi dào và nhiều vitamin tự nhiên.', img: '' },
+                { name: 'Nước ép cam', price: 25000, icon: '🍊', shortDesc: 'Giàu Vitamin C nguyên chất.', fullDesc: 'Cam mọng nước vắt trực tiếp, giữ trọn vẹn vị chua ngọt tự nhiên tinh tế, giúp tăng cường đề kháng và làm sáng da.', img: '' },
+                { name: 'Nước ép dưa hấu', price: 25000, icon: '🍉', shortDesc: 'Giải nhiệt thanh mát ngày hè.', fullDesc: 'Nước ép dưa hấu đỏ au tự nhiên, mát lạnh ngọt lịm tê đầu lưỡi. Thức uống hoàn hảo để đánh bay cơn khát oi bức.', img: '' },
+                { name: 'Nước ép cà rốt + cam', price: 30000, icon: '🥕', shortDesc: 'Sáng mắt đẹp da mỗi ngày.', fullDesc: 'Sự kết hợp hoàn hảo cung cấp lượng lớn Vitamin A và C cho cơ thể. Rất tốt cho sức khỏe tổng thể, giúp sáng mắt và làm đẹp da.', img: '' },
+                { name: 'Nước ép cà rốt + dứa', price: 30000, icon: '🥕', shortDesc: 'Hương vị hòa quyện ngọt mát.', fullDesc: 'Vị chua ngọt dịu của dứa tươi khéo léo làm át đi mùi hăng nhẹ của cà rốt tươi, tạo ra một ly nước ép hỗn hợp vô cùng bổ dưỡng.', img: '' }
             ]},
             { id: 'trasua', title: 'Trà Sữa', icon: '🧋', items: [
-                { name: 'Trà sữa matcha', price: 20000, icon: '🍵', shortDesc: 'Matcha thơm hòa quyện sữa.', fullDesc: 'Dòng trà sữa kết hợp bột matcha nguyên chất với sữa tươi béo ngậy, vị trà xanh rõ nét, hậu vị thơm ngọt dịu dàng.', img: '' },
-                { name: 'Trà sữa truyền thống', price: 20000, icon: '🧋', shortDesc: 'Hương vị kinh điển.', fullDesc: 'Cốt trà đen đậm đặc kết hợp hoàn hảo cùng bột sữa cao cấp nhập khẩu. Vị trà rõ nét, hậu vị thơm béo hài hòa tròn trịa.', img: '' },
-                { name: 'Trà sữa trân châu đường đen', price: 25000, icon: '🧋', shortDesc: 'Trân châu dai đường đen đậm.', fullDesc: 'Trà sữa truyền thống với topping trân châu đen dai dẻo nấu cùng đường đen mật mía đậm đặc, tạo vị ngọt sâu đặc trưng khó quên.', img: '' },
-                { name: 'Trà sữa socola', price: 20000, icon: '🍫', shortDesc: 'Socola béo ngậy thơm nồng.', fullDesc: 'Hương vị socola đậm đà kết hợp cùng sữa tươi béo ngậy, một lựa chọn hoàn hảo cho những ai yêu thích vị ngọt bùi đặc trưng.', img: '' },
-                { name: 'Trà sữa dâu', price: 20000, icon: '🍓', shortDesc: 'Dâu tươi chua ngọt hấp dẫn.', fullDesc: 'Trà sữa thơm béo với sốt dâu tươi tự làm đỏ au đẹp mắt, mang lại vị chua ngọt tự nhiên rất tươi mát và hấp dẫn.', img: '' }
+                { name: 'Trà sữa gạo rang', price: 20000, icon: '🌾', shortDesc: 'Hương gạo rang bùi béo mộc mạc.', fullDesc: 'Dòng trà sữa độc đáo mang đậm hương thơm bùi bùi đặc trưng của gạo rang, hậu vị ngọt thanh nhẹ dịu không gây ngấy.', img: '' },
+                { name: 'Trà sữa truyền thống', price: 20000, icon: '🧋', shortDesc: 'Hương vị trà sữa kinh điển.', fullDesc: 'Cốt trà đen đậm đặc kết hợp hoàn hảo cùng bột sữa cao cấp nhập khẩu. Vị trà rõ nét, hậu vị thơm béo hài hòa tròn trịa.', img: '' },
+                { name: 'Trà sữa matcha kem', price: 25000, icon: '🍵', shortDesc: 'Matcha kem béo ngậy mịn màng.', fullDesc: 'Vị trà xanh matcha chát nhẹ bùi bùi hòa với sữa béo, phủ phía trên là một lớp kem béo mịn màng đầy lôi cuốn.', img: '' },
+                { name: 'Sữa tươi trân châu đường đen', price: 25000, icon: '🥛', shortDesc: 'Sữa tươi béo thanh, trân châu dai.', fullDesc: 'Sữa tươi nguyên chất thanh mát hòa cùng những hàng trân châu đen dẻo dai được nấu đượm với sốt đường mật mía đậm đặc.', img: '' },
+                { name: 'Matcha latte', price: 30000, icon: '🍵', shortDesc: 'Matcha nguyên chất và sữa tươi.', fullDesc: 'Sự kết hợp phân tầng đẹp mắt giữa sữa tươi nguyên chất thanh trùng và lớp trà matcha Nhật Bản thơm nồng béo ngậy.', img: '' }
+            ]},
+            { id: 'suachua', title: 'Sữa Chua', icon: '🥛', items: [
+                { name: 'Sữa chua đánh đá', price: 20000, icon: '🥛', shortDesc: 'Mát lạnh, chua ngọt hài hòa.', fullDesc: 'Sữa chua lên men tự nhiên kết hợp cùng sữa đặc béo ngậy, xay mịn cùng đá mang lại cảm giác mát mẻ, giải khát tức thì.', img: '' },
+                { name: 'Sữa chua trái cây', price: 25000, icon: '🍓', shortDesc: 'Thơm ngon bổ dưỡng cùng trái cây.', fullDesc: 'Sữa chua mềm mịn, chua dịu ăn kèm với các loại trái cây tươi cắt nhỏ, cung cấp nhiều vitamin phong phú cho làn da.', img: '' },
+                { name: 'Sữa chua nha đam', price: 25000, icon: '🪴', shortDesc: 'Sữa chua mịn, nha đam giòn thanh.', fullDesc: 'Sự kết hợp hoàn hảo giữa sữa chua lên men truyền thống và những viên nha đam giòn ngọt mát lành, cực kỳ tốt cho hệ tiêu hóa.', img: '' },
+                { name: 'Sữa chua xoài', price: 25000, icon: '🥭', shortDesc: 'Sốt xoài chín thơm ngọt quyến rũ.', fullDesc: 'Lớp sốt xoài chín tự nhiên vàng ươm, ngọt ngào hòa quyện cùng vị chua dịu tinh tế của sữa chua tạo nên sức hút khó cưỡng.', img: '' }
             ]}
         ];
 
