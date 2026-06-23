@@ -3,163 +3,342 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>E-Menu Premium - Xem Chi Tiết Món Ăn</title>
+    <title>Menu Quán</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #f26b38; 
-            --primary-dark: #d9531e;
-            --bg: #f8f9fa;
-            --surface: rgba(255, 255, 255, 0.85);
-            --surface-pure: #ffffff;
-            --text-main: #1c1c1e;
-            --text-sub: #8e8e93;
-            --border: rgba(234, 235, 237, 0.6);
-            --blur-val: 12px;
+            --cream: #f5ede0;
+            --cream-dark: #ecdcc8;
+            --brown: #5c3d1e;
+            --brown-light: #8b6340;
+            --green: #6b8c5a;
+            --orange: #d4703a;
+            --text: #3b2a1a;
+            --text-sub: #7a5c3e;
+            --border: rgba(92,61,30,0.15);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg); color: var(--text-main);
-            max-width: 480px; margin: 0 auto;
-            position: relative;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            max-width: 480px;
+            margin: 0 auto;
             min-height: 100vh;
-            padding-bottom: 50px;
+            position: relative;
             overflow-x: hidden;
         }
 
-        /* --- AMBIENT GLOW BACKGROUND (Tạo chiều sâu chuyển động mờ) --- */
-        .ambient-glow {
-            position: fixed; width: 300px; height: 300px; border-radius: 50%;
-            filter: blur(80px); opacity: 0.3; pointer-events: none; z-index: -1;
+        /* Nền watercolor trang trí */
+        body::before {
+            content: '';
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                radial-gradient(ellipse at 10% 15%, rgba(180,210,160,0.25) 0%, transparent 45%),
+                radial-gradient(ellipse at 90% 80%, rgba(212,112,58,0.15) 0%, transparent 45%),
+                radial-gradient(ellipse at 50% 50%, rgba(245,237,224,0.9) 0%, transparent 70%);
+            pointer-events: none; z-index: 0;
         }
-        .glow-1 { top: -50px; left: -50px; background: var(--primary); }
-        .glow-2 { bottom: 100px; right: -50px; background: #3498db; }
 
-        /* --- HEADER & NAV GLASSMORPHISM (Hiệu ứng kính mờ chuyển động) --- */
+        /* ===== HEADER ===== */
         header {
-            padding: 20px 20px 15px; 
-            background: var(--surface);
-            backdrop-filter: blur(var(--blur-val));
-            -webkit-backdrop-filter: blur(var(--blur-val));
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(245,237,224,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 2px solid var(--cream-dark);
+            padding: 14px 20px;
             display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 100; 
-            border-bottom: 1px solid var(--border);
         }
-        .brand { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
-        .brand span { color: var(--primary); }
 
+        .brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--brown);
+            letter-spacing: 1px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .brand-leaf { font-size: 1.1rem; }
+
+        .header-search-btn {
+            background: none; border: none; color: var(--brown);
+            font-size: 1.1rem; cursor: pointer; padding: 6px 10px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .header-search-btn:active { background: var(--cream-dark); }
+
+        /* ===== HERO BANNER ===== */
+        .hero-banner {
+            position: relative; z-index: 1;
+            text-align: center;
+            padding: 28px 20px 20px;
+            border-bottom: 2px solid var(--cream-dark);
+        }
+        .hero-ribbon {
+            display: inline-block;
+            background: var(--brown);
+            color: #fff;
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            padding: 10px 40px;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(92,61,30,0.25);
+        }
+        .hero-ribbon::before, .hero-ribbon::after {
+            content: '';
+            position: absolute; top: 50%;
+            width: 24px; height: 2px;
+            background: rgba(255,255,255,0.4);
+            transform: translateY(-50%);
+        }
+        .hero-ribbon::before { left: 14px; }
+        .hero-ribbon::after { right: 14px; }
+        .hero-sub {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            letter-spacing: 2px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        .hero-deco { font-size: 1.2rem; margin-top: 6px; opacity: 0.7; }
+
+        /* ===== CATEGORY NAV ===== */
         .category-nav {
-            display: flex; overflow-x: auto; 
-            background: var(--surface);
-            backdrop-filter: blur(var(--blur-val));
-            -webkit-backdrop-filter: blur(var(--blur-val));
-            padding: 12px 15px; position: sticky; top: 62px; z-index: 99;
-            border-bottom: 1px solid var(--border); scrollbar-width: none;
+            position: sticky; top: 57px; z-index: 99;
+            background: rgba(245,237,224,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex; overflow-x: auto; gap: 8px;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            scrollbar-width: none;
         }
         .category-nav::-webkit-scrollbar { display: none; }
-        
+
         .cat-btn {
-            background: rgba(0, 0, 0, 0.04); border: none; padding: 10px 22px; margin-right: 10px;
-            border-radius: 25px; font-size: 0.9rem; font-weight: 600;
-            color: #48484a; white-space: nowrap; cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
-        .cat-btn.active { 
-            background: var(--primary); color: white; 
-            box-shadow: 0 8px 16px rgba(242, 107, 56, 0.25);
-            transform: translateY(-1px);
-        }
-
-        /* --- MENU DANH SÁCH --- */
-        .menu-section { padding: 25px 20px 0; scroll-margin-top: 130px; }
-        .section-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 18px; color: var(--text-main); letter-spacing: -0.3px; }
-        
-        .menu-item {
-            display: flex; align-items: center; padding: 16px;
-            background: var(--surface-pure);
+            background: rgba(92,61,30,0.07);
+            border: 1.5px solid transparent;
+            padding: 7px 18px;
             border-radius: 20px;
-            margin-bottom: 14px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--brown-light);
+            white-space: nowrap;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            font-family: 'Be Vietnam Pro', sans-serif;
+            transition: all 0.25s;
         }
-        .menu-item:active { 
-            transform: scale(0.97);
-            background: rgba(255,255,255,0.6);
-            filter: blur(0.3px); /* Tạo hiệu ứng nhấp mờ nhẹ khi chạm tay */
+        .cat-btn.active {
+            background: var(--brown);
+            color: #fff;
+            border-color: var(--brown);
+            box-shadow: 0 4px 12px rgba(92,61,30,0.25);
         }
 
-        /* Kích thước ảnh siêu hợp lý, cân đối */
-        .item-img {
-            width: 110px; height: 110px; border-radius: 16px; background: #f2f2f7;
-            display: flex; align-items: center; justify-content: center;
-            margin-right: 16px; flex-shrink: 0;
-            overflow: hidden; position: relative;
-            box-shadow: inset 0 0 1px rgba(0,0,0,0.1);
+        /* ===== MENU SECTION ===== */
+        .menu-section {
+            position: relative; z-index: 1;
+            padding: 0 16px 8px;
+            scroll-margin-top: 130px;
         }
-        .item-img .emoji-fallback { font-size: 2.5rem; display: block; }
-        .item-img img { width: 100%; height: 100%; object-fit: cover; display: none; transition: transform 0.5s ease; }
+
+        /* Category header */
+        .section-header {
+            display: flex; align-items: center; gap: 12px;
+            padding: 22px 4px 14px;
+        }
+        .section-header-line {
+            flex: 1; height: 1.5px;
+            background: linear-gradient(to right, var(--brown-light), transparent);
+            opacity: 0.3;
+        }
+        .section-header-line.right {
+            background: linear-gradient(to left, var(--brown-light), transparent);
+        }
+        .section-title-box {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--brown);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            box-shadow: 0 4px 14px rgba(92,61,30,0.2);
+        }
+        .section-title-box .s-icon { font-size: 1rem; }
+        .section-title-box .s-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Menu item card — kiểu tờ menu vintage */
+        .menu-item {
+            display: flex; align-items: center;
+            background: rgba(255,252,247,0.9);
+            border: 1.5px solid var(--cream-dark);
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(92,61,30,0.07);
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .menu-item::before {
+            content: '';
+            position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            background: linear-gradient(to bottom, var(--green), var(--orange));
+            border-radius: 4px 0 0 4px;
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .menu-item:active {
+            transform: scale(0.97);
+            background: rgba(245,237,224,0.95);
+        }
+        .menu-item:active::before { opacity: 1; }
+
+        /* Ảnh / emoji item */
+        .item-img {
+            width: 90px; height: 90px;
+            border-radius: 12px;
+            background: var(--cream-dark);
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 14px; flex-shrink: 0;
+            overflow: hidden;
+            border: 1.5px solid rgba(92,61,30,0.1);
+            box-shadow: 0 2px 8px rgba(92,61,30,0.1);
+        }
+        .item-img .emoji-fallback { font-size: 2.5rem; }
+        .item-img img { width: 100%; height: 100%; object-fit: cover; display: none; }
         .item-img.has-img .emoji-fallback { display: none; }
         .item-img.has-img img { display: block; }
-        .menu-item:hover .item-img img { transform: scale(1.05); }
 
-        .item-info { flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; min-height: 110px; padding: 2px 0; }
-        .item-name { font-size: 1.1rem; font-weight: 700; color: var(--text-main); line-height: 1.3; }
-        .item-desc-short { font-size: 0.85rem; color: var(--text-sub); margin: 6px 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .item-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-        .item-price { font-size: 1.1rem; font-weight: 800; color: var(--primary); }
-        
+        .item-info { flex: 1; min-height: 90px; display: flex; flex-direction: column; justify-content: space-between; }
+        .item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--brown);
+            line-height: 1.3;
+        }
+        .item-desc-short {
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            margin: 4px 0;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .item-bottom {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: auto;
+        }
+        .item-price {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--orange);
+        }
         .view-btn {
-            font-size: 0.8rem; color: #555; background: #f2f2f7;
-            padding: 6px 14px; border-radius: 20px; border: none; font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--brown-light);
+            background: var(--cream-dark);
+            padding: 5px 12px;
+            border-radius: 20px;
+            border: none;
+            font-weight: 600;
             display: flex; align-items: center; gap: 4px;
         }
 
-        /* --- MODAL XEM CHI TIẾT CAO CẤP (MOTION BLUR BACKDROP) --- */
+        /* ===== MODAL XEM CHI TIẾT ===== */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4); opacity: 0; visibility: hidden;
-            transition: all 0.4s ease; z-index: 2000; 
-            backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px);
+            background: rgba(59,42,26,0.5);
+            opacity: 0; visibility: hidden;
+            transition: all 0.4s ease;
+            z-index: 2000;
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
         }
-        /* Khi active, kích hoạt tính năng mờ dần hình ảnh nền phía dưới */
-        .modal-overlay.active { opacity: 1; visibility: visible; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-        
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
         .modal-content {
             position: fixed; bottom: -100%; left: 50%; transform: translateX(-50%);
-            width: 100%; max-width: 480px; background: var(--surface-pure);
-            border-top-left-radius: 32px; border-top-right-radius: 32px;
-            padding: 0 0 40px 0; 
+            width: 100%; max-width: 480px;
+            background: var(--cream);
+            border-top-left-radius: 28px; border-top-right-radius: 28px;
+            padding: 0 0 44px 0;
             transition: bottom 0.5s cubic-bezier(0.15, 0.85, 0.35, 1);
-            z-index: 2001; overflow: hidden; 
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
+            z-index: 2001;
+            overflow: hidden;
+            box-shadow: 0 -8px 40px rgba(59,42,26,0.2);
         }
         .modal-content.active { bottom: 0; }
-        
+
         .close-modal {
-            position: absolute; top: 16px; right: 16px; width: 36px; height: 36px;
-            background: rgba(0,0,0,0.4); border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; color: white;
-            z-index: 10; backdrop-filter: blur(5px);
+            position: absolute; top: 14px; right: 14px;
+            width: 34px; height: 34px;
+            background: rgba(59,42,26,0.45);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; cursor: pointer; color: white;
+            z-index: 10; backdrop-filter: blur(4px);
         }
-        
-        /* Khung ảnh chi tiết lớn siêu sắc nét */
-        .modal-hero { width: 100%; height: 400px; position: relative; overflow: hidden; background: #efeff4; }
+
+        .modal-hero {
+            width: 100%; height: 360px;
+            position: relative; overflow: hidden;
+            background: var(--cream-dark);
+        }
         .modal-hero img { width: 100%; height: 100%; object-fit: cover; }
-        .modal-emoji-fallback { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 6rem; }
+        .modal-emoji-fallback {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6rem;
+        }
+        /* Gradient overlay dưới ảnh */
+        .modal-hero::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
+            background: linear-gradient(to top, var(--cream), transparent);
+        }
 
-        .modal-body { padding: 30px 24px; text-align: left; }
-        .modal-name { font-size: 1.6rem; font-weight: 800; color: var(--text-main); margin-bottom: 12px; letter-spacing: -0.5px; }
-        .modal-divider { width: 45px; height: 5px; background: var(--primary); border-radius: 10px; margin-bottom: 20px; }
-        .modal-desc-full { font-size: 1rem; color: #3a3a3c; line-height: 1.7; font-weight: 400; }
+        .modal-body { padding: 24px 24px 10px; }
+        .modal-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem; font-weight: 900;
+            color: var(--brown); letter-spacing: -0.3px;
+        }
+        .modal-divider {
+            display: flex; align-items: center; gap: 10px;
+            margin: 10px 0 16px;
+        }
+        .modal-divider-line { flex: 1; height: 1px; background: var(--cream-dark); }
+        .modal-divider-icon { color: var(--orange); font-size: 0.9rem; }
+        .modal-desc-full {
+            font-size: 0.95rem;
+            color: var(--text-sub);
+            line-height: 1.75;
+        }
 
-        /* --- SEARCH OVERLAY --- */
+        /* ===== SEARCH OVERLAY ===== */
         .search-overlay {
             position: fixed; top: 0; left: 50%; transform: translateX(-50%);
             width: 100%; max-width: 480px; height: 100%;
-            background: var(--surface-pure); z-index: 4000;
+            background: var(--cream); z-index: 4000;
             display: flex; flex-direction: column;
             opacity: 0; pointer-events: none;
             transition: opacity 0.25s ease;
@@ -167,162 +346,193 @@
         .search-overlay.active { opacity: 1; pointer-events: all; }
         .search-bar-wrap {
             display: flex; align-items: center; gap: 12px;
-            padding: 16px 20px; border-bottom: 1px solid var(--border);
+            padding: 16px 18px;
+            border-bottom: 1.5px solid var(--cream-dark);
+            background: rgba(245,237,224,0.95);
         }
         .search-input {
             flex: 1; border: none; outline: none;
-            font-size: 1.05rem; font-weight: 500; background: transparent; color: var(--text-main);
+            font-size: 1rem; font-weight: 500;
+            background: transparent; color: var(--text);
+            font-family: 'Be Vietnam Pro', sans-serif;
         }
         .search-input::placeholder { color: var(--text-sub); }
-        .search-cancel { background: none; border: none; color: var(--primary); font-size: 0.95rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
-        .search-results { flex: 1; overflow-y: auto; padding: 12px 20px; }
-        .search-empty { padding: 60px 0; text-align: center; color: var(--text-sub); }
+        .search-cancel {
+            background: none; border: none; color: var(--orange);
+            font-size: 0.9rem; font-weight: 700; cursor: pointer;
+        }
+        .search-results { flex: 1; overflow-y: auto; padding: 10px 18px; }
+        .search-empty { padding: 60px 0; text-align: center; color: var(--text-sub); font-size: 0.9rem; }
         .search-hit {
             display: flex; align-items: center; gap: 14px;
-            padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer;
+            padding: 12px 0; border-bottom: 1px solid var(--cream-dark); cursor: pointer;
         }
-        .search-hit-icon { font-size: 1.8rem; width: 44px; text-align: center; flex-shrink: 0; }
-        .search-hit-info { flex: 1; }
-        .search-hit-name { font-size: 0.95rem; font-weight: 700; }
-        .search-hit-cat { font-size: 0.8rem; color: var(--text-sub); margin-top: 2px; }
+        .search-hit-icon { font-size: 1.8rem; width: 40px; text-align: center; flex-shrink: 0; }
+        .search-hit-name { font-weight: 700; color: var(--brown); font-size: 0.95rem; }
+        .search-hit-cat { font-size: 0.78rem; color: var(--text-sub); margin-top: 2px; }
 
+        /* Footer decoration */
+        .menu-footer {
+            position: relative; z-index: 1;
+            text-align: center;
+            padding: 30px 20px 50px;
+            color: var(--text-sub);
+            font-size: 0.8rem;
+            border-top: 1.5px dashed var(--cream-dark);
+            margin-top: 16px;
+        }
+        .menu-footer-icon { font-size: 1.4rem; margin-bottom: 6px; display: block; opacity: 0.5; }
     </style>
 </head>
 <body>
 
-    <div class="ambient-glow glow-1"></div>
-    <div class="ambient-glow glow-2"></div>
-
+    <!-- HEADER -->
     <header>
-        <div class="brand">Tiệm <span>Menu</span></div>
-        <button onclick="openSearch()" style="background:none;border:none;color:var(--text-main);font-size:1.1rem;cursor:pointer;padding:4px 8px;"><i class="fas fa-search"></i></button>
+        <div class="brand"><span class="brand-leaf">🌿</span> Thực Đơn</div>
+        <button class="header-search-btn" onclick="openSearch()"><i class="fas fa-search"></i></button>
     </header>
 
+    <!-- HERO -->
+    <div class="hero-banner">
+        <div class="hero-ribbon">MENU</div>
+        <div class="hero-sub">Thức uống & Đồ ăn</div>
+        <div class="hero-deco">🌸 🍃 🌼</div>
+    </div>
+
+    <!-- CATEGORY NAV -->
     <nav class="category-nav" id="catNav"></nav>
 
+    <!-- MENU CONTENT -->
     <main id="menu-container"></main>
 
+    <!-- FOOTER -->
+    <div class="menu-footer">
+        <span class="menu-footer-icon">☕</span>
+        Cảm ơn bạn đã ghé thăm
+    </div>
+
+    <!-- MODAL -->
     <div class="modal-overlay" id="modalOverlay"></div>
     <div class="modal-content" id="itemModal">
         <div class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></div>
-        
         <div class="modal-hero">
-            <img src="" id="modalHeroPhoto" alt="Ảnh Demo Món" />
+            <img src="" id="modalHeroPhoto" alt="" />
             <div class="modal-emoji-fallback" id="modalEmojiFallback">☕</div>
         </div>
-
         <div class="modal-body">
-            <h2 class="modal-name" id="modalName">Tên món ăn</h2>
-            <div class="modal-divider"></div>
-            <p class="modal-desc-full" id="modalDescription">Mô tả đầy đủ thông tin chi tiết.</p>
+            <h2 class="modal-name" id="modalName"></h2>
+            <div class="modal-divider">
+                <div class="modal-divider-line"></div>
+                <i class="fas fa-leaf modal-divider-icon"></i>
+                <div class="modal-divider-line"></div>
+            </div>
+            <p class="modal-desc-full" id="modalDescription"></p>
         </div>
     </div>
 
     <!-- SEARCH OVERLAY -->
     <div class="search-overlay" id="searchOverlay">
         <div class="search-bar-wrap">
-            <i class="fas fa-search" style="color:var(--text-sub);"></i>
+            <i class="fas fa-search" style="color:var(--text-sub);font-size:0.9rem;"></i>
             <input class="search-input" id="searchInput" type="text" placeholder="Tìm món ăn, đồ uống..." oninput="doSearch()" />
             <button class="search-cancel" onclick="closeSearch()">Huỷ</button>
         </div>
         <div class="search-results" id="searchResults">
-            <div class="search-empty"><i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:12px;opacity:0.2;"></i>Nhập tên món bạn muốn tìm</div>
+            <div class="search-empty">
+                <i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.2;"></i>
+                Nhập tên món bạn muốn tìm
+            </div>
         </div>
     </div>
 
     <script>
-        // --- DỮ LIỆU MENU FULL ---
-        // Bạn có thể tùy ý sửa đường dẫn ảnh tại 'img', ví dụ: 'pic/tra_canh.png' như đã thiết lập sẵn dưới đây.
         const menuData = [
-            { id: 'cafe', title: '☕️ Cafe', items: [
-                { name: 'Đen đá / nóng', price: 20000, icon: '☕', shortDesc: 'Cà phê nguyên chất, đậm vị.', fullDesc: 'Hương vị cà phê nguyên bản, rang xay mộc mạc mang đến sự tỉnh táo tức thì. Phù hợp cho những ai yêu thích vị đắng truyền thống đặc trưng của hạt Robusta.', img: 'menu/den_da.png' }, 
-                { name: 'Nâu đá / nóng', price: 25000, icon: '☕', shortDesc: 'Cà phê hòa quyện sữa béo.', fullDesc: 'Sự kết hợp hoàn hảo giữa cốt cà phê pha phin thơm nồng và lớp sữa đặc béo ngậy. Thức uống kinh điển đậm đà của người Việt.', img: 'menu/nau_da.png' },
-                { name: 'Bạc xỉu', price: 30000, icon: '🥛', shortDesc: 'Sữa tươi thơm béo, ít cà phê.', fullDesc: 'Nhiều sữa béo hơn, chỉ điểm một chút cà phê cốt, thích hợp cho người yêu vị ngọt dịu và hương thơm cà phê nhẹ nhàng tinh tế.', img: 'menu/pic.png' },
-                { name: 'Cafe muối', price: 30000, icon: '🧂', shortDesc: 'Vị mặn ngọt béo độc đáo.', fullDesc: 'Lớp kem mặn béo ngậy mịn màng phía trên hòa quyện cùng vị đắng nhẹ của cà phê bên dưới tạo nên một trải nghiệm vị giác đầy bùng nổ và lôi cuốn.', img: 'menu/pic.png' },
-                { name: 'Cafe cốt dừa', price: 30000, icon: '🥥', shortDesc: 'Cà phê pha cốt dừa xay đá.', fullDesc: 'Cốt dừa được xay mịn với đá tạo độ xốp mượt, kết hợp với dòng cà phê đậm đà. Thức uống lạ miệng, mát lạnh và cực kỳ thơm mùi dừa.', img: 'menu/pic.png' }
+            { id: 'cafe', title: 'Cafe', icon: '☕', items: [
+                { name: 'Đen đá / nóng', price: 20000, icon: '☕', shortDesc: 'Cà phê nguyên chất, đậm vị.', fullDesc: 'Hương vị cà phê nguyên bản, rang xay mộc mạc mang đến sự tỉnh táo tức thì. Phù hợp cho những ai yêu thích vị đắng truyền thống đặc trưng của hạt Robusta.', img: 'menu/den_da.png' },
+                { name: 'Sữa đá / nóng', price: 20000, icon: '☕', shortDesc: 'Cà phê hòa quyện sữa béo.', fullDesc: 'Sự kết hợp hoàn hảo giữa cốt cà phê pha phin thơm nồng và lớp sữa đặc béo ngậy. Thức uống kinh điển đậm đà của người Việt.', img: 'menu/nau_da.png' },
+                { name: 'Bạc xỉu', price: 25000, icon: '🥛', shortDesc: 'Sữa tươi thơm béo, ít cà phê.', fullDesc: 'Nhiều sữa béo hơn, chỉ điểm một chút cà phê cốt, thích hợp cho người yêu vị ngọt dịu và hương thơm cà phê nhẹ nhàng tinh tế.', img: '' },
+                { name: 'Cà phê muối', price: 25000, icon: '🧂', shortDesc: 'Vị mặn ngọt béo độc đáo.', fullDesc: 'Lớp kem mặn béo ngậy mịn màng phía trên hòa quyện cùng vị đắng nhẹ của cà phê bên dưới tạo nên một trải nghiệm vị giác đầy bùng nổ và lôi cuốn.', img: '' },
+                { name: 'Cà phê cốt dừa', price: 30000, icon: '🥥', shortDesc: 'Cà phê pha cốt dừa xay đá.', fullDesc: 'Cốt dừa được xay mịn với đá tạo độ xốp mượt, kết hợp với dòng cà phê đậm đà. Thức uống lạ miệng, mát lạnh và cực kỳ thơm mùi dừa.', img: '' }
             ]},
-            { id: 'tra', title: '🍵 Trà Thanh Mát', items: [
-                { name: 'Trà bí đao hạt chia', price: 15000, icon: '🌿', shortDesc: 'Thanh nhiệt, giải độc.', fullDesc: 'Trà bí đao nấu thủ công từ quả tươi kết hợp hạt chia thanh mát, giúp thanh lọc và giải nhiệt cơ thể cực tốt cho những ngày nắng nóng.', img: 'menu/pic.png' },
-                { name: 'Trà chanh', price: 15000, icon: '🍋‍🟩', shortDesc: 'Chua ngọt sảng khoái.', fullDesc: 'Vị chanh tươi mát hòa quyện cùng cốt trà đen ủ đậm vị, mang lại cảm giác sảng khoái, giải khát tức thì.', img: 'menu/pic.png' }, 
-                { name: 'Trà chanh nha đam', price: 20000, icon: '🪴', shortDesc: 'Trà chanh kèm nha đam giòn.', fullDesc: 'Sự nâng cấp tuyệt vời của trà chanh truyền thống với topping nha đam cắt lựu giòn sần sật nhai cực vui miệng.', img: 'menu/pic.png' },
-                { name: 'Trà quất', price: 15000, icon: '🍊', shortDesc: 'Thơm lừng hương quất tươi.', fullDesc: 'Sử dụng quả quất tươi vắt trực tiếp mang lại mùi thơm tinh dầu đặc trưng ở vỏ, vị chua ngọt hài hòa dễ chịu.', img: 'menu/pic.png' },
-                { name: 'Trà quất nha đam', price: 20000, icon: '🪴', shortDesc: 'Trà quất thơm kèm nha đam.', fullDesc: 'Hương vị quất chua thanh thanh kết hợp cùng thạch nha đam tươi mát, thức uống lý tưởng để làm mới tinh thần.', img: 'menu/pic.png' },
-                { name: 'Trà đào', price: 15000, icon: '🍑', shortDesc: 'Trà hương đào dịu nhẹ.', fullDesc: 'Trà đen hảo hạng ủ cùng hương đào tự nhiên ngọt ngào, mang lại cảm giác nhẹ nhàng, thư thái thoang thoảng.', img: 'menu/pic.png' },
-                { name: 'Trà đào cam sả', price: 25000, icon: '🍹', shortDesc: 'Sự kết hợp hoàn hảo.', fullDesc: 'Sự hòa quyện tuyệt vời giữa vị đào ngọt mọng, cam tươi chua nhẹ và hương sả nồng ấm kích thích hoàn hảo mọi giác quan.', img: 'menu/pic.png' }, 
-                { name: 'Trà xoài chanh leo', price: 25000, icon: '🥭', shortDesc: 'Trái cây nhiệt đới tươi mát.', fullDesc: 'Sự bùng nổ của vùng trái cây nhiệt đới: vị xoài chín ngọt lịm đi kèm chanh leo chua thanh tột đỉnh tạo nên màu sắc vàng ươm đẹp mắt.', img: 'menu/pic.png' },
-                { name: 'Trà mãng cầu', price: 25000, icon: '🍐', shortDesc: 'Mứt mãng cầu dầm chua ngọt.', fullDesc: 'Cốt trà tươi kết hợp cùng thịt quả mãng cầu xiêm xé sợi chua chua ngọt ngọt, mang lại hương vị thanh thanh nhai rõ thớ quả.', img: 'menu/pic.png' }
+            { id: 'tra', title: 'Trà', icon: '🍵', items: [
+                { name: 'Trà trái cây', price: 20000, icon: '🍓', shortDesc: 'Hương vị trái cây tươi mát.', fullDesc: 'Hòa quyện của nhiều loại trái cây tươi ngâm cùng cốt trà, mang lại vị ngọt thanh tự nhiên và màu sắc bắt mắt đầy hấp dẫn.', img: '' },
+                { name: 'Trà đào cam xả', price: 20000, icon: '🍑', shortDesc: 'Sự kết hợp hoàn hảo.', fullDesc: 'Sự hòa quyện tuyệt vời giữa vị đào ngọt mọng, cam tươi chua nhẹ và hương sả nồng ấm kích thích hoàn hảo mọi giác quan.', img: '' },
+                { name: 'Trà chanh', price: 10000, icon: '🍋', shortDesc: 'Chua ngọt sảng khoái.', fullDesc: 'Vị chanh tươi mát hòa quyện cùng cốt trà đen ủ đậm vị, mang lại cảm giác sảng khoái, giải khát tức thì.', img: '' },
+                { name: 'Trà chanh nha đam', price: 15000, icon: '🪴', shortDesc: 'Trà chanh kèm nha đam giòn.', fullDesc: 'Sự nâng cấp tuyệt vời của trà chanh truyền thống với topping nha đam cắt lựu giòn sần sật nhai cực vui miệng.', img: '' },
+                { name: 'Trà tắc', price: 10000, icon: '🍊', shortDesc: 'Thơm lừng hương quất tươi.', fullDesc: 'Sử dụng quả quất tươi vắt trực tiếp mang lại mùi thơm tinh dầu đặc trưng ở vỏ, vị chua ngọt hài hòa dễ chịu.', img: '' }
             ]},
-            { id: 'tranong', title: '♨️ Trà Nóng', items: [
-                { name: 'Trà gừng táo đỏ', price: 25000, icon: '🍎', shortDesc: 'Làm ấm cơ thể.', fullDesc: 'Trà gừng già cay nhẹ kết hợp với quả táo đỏ sấy bổ dưỡng. Thức uống rất tốt cho sức khỏe, giúp thư giãn và làm ấm cơ thể hiệu quả.', img: 'menu/pic.png' },
-                { name: 'Trà gừng chanh sả', price: 25000, icon: '🫚', shortDesc: 'Giải cảm, tăng đề kháng.', fullDesc: 'Thức uống ấm nóng giúp thanh lọc cơ thể, hỗ trợ giải cảm hiệu quả nhờ sự kết hợp giữa gừng ấm, chanh tươi và các nhánh sả thơm.', img: 'menu/pic.png' },
-                { name: 'Trà đào cam sả nóng', price: 25000, icon: '☕', shortDesc: 'Phiên bản nóng ấm.', fullDesc: 'Hương vị đào cam sả quen thuộc nhưng được phục vụ ở nhiệt độ ấm nóng, giúp tinh dầu sả và hương cam bay lên thơm nức mũi.', img: 'menu/pic.png' },
-                { name: 'Trà quất mật ong', price: 25000, icon: '🍯', shortDesc: 'Tốt cho cổ họng.', fullDesc: 'Quất quả chua thanh kết hợp cùng mật ong rừng nguyên chất ngọt dịu êm dịu, giúp làm ấm và làm dịu cổ họng vô cùng tốt.', img: 'menu/pic.png' }
+            { id: 'nuocep', title: 'Nước Ép', icon: '🥤', items: [
+                { name: 'Nước ép dưa hấu', price: 30000, icon: '🍉', shortDesc: 'Giải nhiệt mùa hè.', fullDesc: 'Nước ép dưa hấu đỏ au tự nhiên, mát lạnh ngọt lịm tê đầu lưỡi. Thức uống hoàn hảo để đánh bay cơn khát oi bức.', img: '' },
+                { name: 'Nước ép dứa (mix cà rốt)', price: 30000, icon: '🍍', shortDesc: 'Hương vị hòa quyện.', fullDesc: 'Vị chua ngọt dịu của dứa tươi sẽ khéo léo làm át đi mùi hăng nhẹ của cà rốt, tạo ra một ly nước ép hỗn hợp cực kỳ dễ uống.', img: '' },
+                { name: 'Nước ép cam (mix cà rốt)', price: 30000, icon: '🍊', shortDesc: 'Mix vị sáng mắt đẹp da.', fullDesc: 'Sự kết hợp hoàn hảo cung cấp lượng lớn Vitamin A và C cho cơ thể. Rất tốt cho sức khỏe tổng thể, giúp sáng mắt và đẹp da.', img: '' },
+                { name: 'Nước ép táo (mix cà rốt)', price: 30000, icon: '🍎', shortDesc: 'Ngọt mát bổ dưỡng.', fullDesc: 'Táo tươi ép cùng cà rốt tạo nên hỗn hợp vitamin phong phú, vị ngọt tự nhiên dịu nhẹ, rất tốt cho tiêu hóa và làn da.', img: '' }
             ]},
-            { id: 'nuocep', title: '🥤 Nước Ép Nguyên Chất', items: [
-                { name: 'Nước ép dứa', price: 25000, icon: '🍍', shortDesc: 'Ép dứa tươi 100%.', fullDesc: 'Quả dứa tươi mọng nước được ép chậm giữ lại trọn vẹn vitamin, vị chua ngọt tự nhiên nguyên bản, không pha thêm đường hóa học.', img: 'menu/pic.png' },
-                { name: 'Nước ép cam', price: 25000, icon: '🍊', shortDesc: 'Cam vắt giàu Vitamin C.', fullDesc: 'Những quả cam sành mọng nước được vắt trực tiếp, bổ sung hàm lượng lớn vitamin C tự nhiên giúp tăng cường sức đề kháng.', img: 'menu/pic.png' },
-                { name: 'Nước ép dưa hấu', price: 25000, icon: '🍉', shortDesc: 'Giải nhiệt mùa hè.', fullDesc: 'Nước ép dưa hấu đỏ au tự nhiên, mát lạnh ngọt lịm tê đầu lưỡi. Thức uống hoàn hảo để đánh bay cơn khát oi bức.', img: '' },
-                { name: 'Nước ép cà rốt + cam', price: 30000, icon: '🥕', shortDesc: 'Mix vị sáng mắt đẹp da.', fullDesc: 'Sự kết hợp hoàn hảo cung cấp lượng lớn Vitamin A và C cho cơ thể. Rất tốt cho sức khỏe tổng thể, giúp sáng mắt và đẹp da.', img: 'menu/pic.png' },
-                { name: 'Nước ép cà rốt + dứa', price: 30000, icon: '🥕', shortDesc: 'Hương vị hòa quyện.', fullDesc: 'Vị chua ngọt dịu của dứa tươi sẽ khéo léo làm át đi mùi hăng nhẹ của cà rốt, tạo ra một ly nước ép hỗn hợp cực kỳ dễ uống.', img: 'menu/pic.png' }
+            { id: 'matcha', title: 'Matcha', icon: '🍃', items: [
+                { name: 'Matcha latte', price: 25000, icon: '🍵', shortDesc: 'Matcha và sữa tươi.', fullDesc: 'Sự kết hợp phân tầng đẹp mắt giữa sữa tươi nguyên chất thanh trùng và lớp trà matcha Nhật Bản thơm nồng, không dùng bột béo.', img: '' },
+                { name: 'Matcha kem muối', price: 25000, icon: '🍵', shortDesc: 'Matcha kèm kem mặn béo.', fullDesc: 'Lục trà cao cấp kết hợp bột matcha nguyên chất, phủ phía trên là một lớp kem béo ngậy hơi mằn mặn đầy lôi cuốn.', img: '' },
+                { name: 'Matcha latte dâu', price: 25000, icon: '🍓', shortDesc: 'Matcha hòa quyện dâu tươi.', fullDesc: 'Phiên bản đặc biệt của matcha latte với topping dâu tươi thái lát và sốt dâu đỏ au, vừa ngon vừa đẹp mắt cho những tấm ảnh lung linh.', img: '' },
+                { name: 'Coco matcha dừa non', price: 30000, icon: '🥥', shortDesc: 'Matcha cốt dừa mát lạnh.', fullDesc: 'Sự kết hợp độc đáo giữa matcha xanh mát và cốt nước dừa non thanh ngọt, tạo ra thức uống vừa mát lạnh vừa thơm hương nhiệt đới.', img: '' }
             ]},
-            { id: 'trasua', title: '🧋 Trà Sữa Đậm Vị', items: [
-                { name: 'Trà sữa gạo rang', price: 20000, icon: '🌾', shortDesc: 'Hương gạo rang Nhật Bản.', fullDesc: 'Dòng trà sữa sở hữu mùi thơm thanh nhẹ đặc trưng từ hạt gạo lứt rang kiểu Nhật, vị ngọt dịu thanh tao, không bị ngấy béo.', img: 'menu/pic.png' },
-                { name: 'Trà sữa truyền thống', price: 20000, icon: '🧋', shortDesc: 'Hương vị kinh điển.', fullDesc: 'Cốt trà đen đậm đặc kết hợp hoàn hảo cùng bột sữa cao cấp nhập khẩu. Vị trà rõ nét, hậu vị thơm béo hài hòa tròn trịa.', img: 'menu/pic.png' },
-                { name: 'Trà sữa matcha kem', price: 25000, icon: '🍵', shortDesc: 'Matcha thơm kèm kem béo.', fullDesc: 'Lục trà cao cấp kết hợp bột matcha nguyên chất, phủ phía trên là một lớp kem béo ngậy hơi mằn mặn đầy lôi cuốn.', img: 'menu/pic.png' },
-                { name: 'Sữa tươi trân châu ĐĐ', price: 25000, icon: '🥛', shortDesc: 'Sữa tươi Đà Lạt milk.', fullDesc: 'Sữa tươi không đường thanh trùng mát lạnh, hòa cùng những đường vân sốt mật đường đen tự nấu đậm đặc và trân châu dai dẻo.', img: 'menu/pic.png' },
-                { name: 'Matcha latte', price: 30000, icon: '🍵', shortDesc: 'Matcha và sữa tươi.', fullDesc: 'Sự kết hợp phân tầng đẹp mắt giữa sữa tươi nguyên chất thanh trùng và lớp trà matcha Nhật Bản thơm nồng, không dùng bột béo.', img: 'menu/pic.png' }
-            ]},
-            { id: 'suachua', title: '🥣 Sữa Chua Trái Cây', items: [
-                { name: 'Sữa chua đánh đá', price: 20000, icon: '🧊', shortDesc: 'Chua ngọt mát lạnh.', fullDesc: 'Sữa chua lên men tự nhiên được đánh bông mịn cùng đá bào và một chút chanh tươi tạo vị chua thanh sảng khoái.', img: 'menu/pic.png' },
-                { name: 'Sữa chua trái cây', price: 25000, icon: '🍓', shortDesc: 'Mix nhiều loại trái cây tươi.', fullDesc: 'Sữa chua mềm mịn kết hợp dầm cùng các loại hoa quả tươi cắt nhỏ theo mùa (dưa hấu, xoài, thanh long...), vừa ngon vừa đẹp dáng.', img: 'menu/pic.png' },
-                { name: 'Sữa chua nha đam', price: 25000, icon: '🪴', shortDesc: 'Sữa chua kèm nha đam giòn.', fullDesc: 'Sữa chua chua ngọt dịu nhẹ trộn lẫn cùng các khối thạch nha đam tươi giòn sần sật mọng nước, ăn vô cùng mát ruột.', img: 'menu/pic.png' },
-                { name: 'Sữa chua xoài', price: 25000, icon: '🥭', shortDesc: 'Sốt xoài tươi chua ngọt.', fullDesc: 'Sữa chua trắng ăn kèm lớp sốt mứt quả xoài tự sên và các viên xoài tươi cắt hạt lựu ngọt lịm vô cùng hấp dẫn.', img: 'menu/pic.png' }
+            { id: 'trasua', title: 'Trà Sữa', icon: '🧋', items: [
+                { name: 'Trà sữa matcha', price: 20000, icon: '🍵', shortDesc: 'Matcha thơm hòa quyện sữa.', fullDesc: 'Dòng trà sữa kết hợp bột matcha nguyên chất với sữa tươi béo ngậy, vị trà xanh rõ nét, hậu vị thơm ngọt dịu dàng.', img: '' },
+                { name: 'Trà sữa truyền thống', price: 20000, icon: '🧋', shortDesc: 'Hương vị kinh điển.', fullDesc: 'Cốt trà đen đậm đặc kết hợp hoàn hảo cùng bột sữa cao cấp nhập khẩu. Vị trà rõ nét, hậu vị thơm béo hài hòa tròn trịa.', img: '' },
+                { name: 'Trà sữa trân châu đường đen', price: 25000, icon: '🧋', shortDesc: 'Trân châu dai đường đen đậm.', fullDesc: 'Trà sữa truyền thống với topping trân châu đen dai dẻo nấu cùng đường đen mật mía đậm đặc, tạo vị ngọt sâu đặc trưng khó quên.', img: '' },
+                { name: 'Trà sữa socola', price: 20000, icon: '🍫', shortDesc: 'Socola béo ngậy thơm nồng.', fullDesc: 'Hương vị socola đậm đà kết hợp cùng sữa tươi béo ngậy, một lựa chọn hoàn hảo cho những ai yêu thích vị ngọt bùi đặc trưng.', img: '' },
+                { name: 'Trà sữa dâu', price: 20000, icon: '🍓', shortDesc: 'Dâu tươi chua ngọt hấp dẫn.', fullDesc: 'Trà sữa thơm béo với sốt dâu tươi tự làm đỏ au đẹp mắt, mang lại vị chua ngọt tự nhiên rất tươi mát và hấp dẫn.', img: '' }
             ]}
         ];
 
         const formatPrice = (p) => p.toLocaleString('vi-VN') + 'đ';
 
-        // --- 1. RENDER ĐIỀU HƯỚNG & DANH SÁCH MÓN ---
+        // Render nav & menu
         const navContainer = document.getElementById('catNav');
         const menuContainer = document.getElementById('menu-container');
 
         menuData.forEach((sec, index) => {
-            // Render Nav
-            navContainer.innerHTML += `<div class="cat-btn ${index===0?'active':''}" onclick="scrollToSec('${sec.id}')">${sec.title}</div>`;
+            navContainer.innerHTML += `<button class="cat-btn ${index===0?'active':''}" onclick="scrollToSec('${sec.id}')">${sec.icon} ${sec.title}</button>`;
 
-            // Render Section Món
-            let sectionHTML = `<section id="${sec.id}" class="menu-section"><h2 class="section-title">${sec.title}</h2>`;
+            let html = `<section id="${sec.id}" class="menu-section">
+                <div class="section-header">
+                    <div class="section-header-line"></div>
+                    <div class="section-title-box">
+                        <span class="s-icon">${sec.icon}</span>
+                        <span class="s-text">${sec.title.toUpperCase()}</span>
+                    </div>
+                    <div class="section-header-line right"></div>
+                </div>`;
+
             sec.items.forEach(item => {
                 const hasImg = item.img ? 'has-img' : '';
                 const itemStr = JSON.stringify(item).replace(/"/g, '&quot;');
-                sectionHTML += `
-                    <div class="menu-item" onclick="openModal(${itemStr})">
-                        <div class="item-img ${hasImg}">
-                            <span class="emoji-fallback">${item.icon}</span>
-                            <img src="${item.img || ''}" alt="${item.name}" />
+                html += `
+                <div class="menu-item" onclick="openModal(${itemStr})">
+                    <div class="item-img ${hasImg}">
+                        <span class="emoji-fallback">${item.icon}</span>
+                        <img src="${item.img||''}" alt="${item.name}" />
+                    </div>
+                    <div class="item-info">
+                        <div>
+                            <div class="item-name">${item.name}</div>
+                            <div class="item-desc-short">${item.shortDesc}</div>
                         </div>
-                        <div class="item-info">
-                            <div class="top-info">
-                                <div class="item-name">${item.name}</div>
-                                <div class="item-desc-short">${item.shortDesc}</div>
-                            </div>
-                            <div class="item-bottom">
-                                <div class="item-price">${formatPrice(item.price)}</div>
-                                <span class="view-btn">Xem ảnh <i class="fas fa-chevron-right" style="font-size:0.65rem;"></i></span>
-                            </div>
+                        <div class="item-bottom">
+                            <div class="item-price">${formatPrice(item.price)}</div>
+                            <span class="view-btn">Xem <i class="fas fa-chevron-right" style="font-size:0.6rem;"></i></span>
                         </div>
-                    </div>`;
+                    </div>
+                </div>`;
             });
-            sectionHTML += `</section>`;
-            menuContainer.innerHTML += sectionHTML;
+
+            html += `</section>`;
+            menuContainer.innerHTML += html;
         });
 
-        // --- 2. THEO DÕI CUỘN TRANG (SCROLL SPY) ---
+        // Scroll spy
         const sections = document.querySelectorAll('.menu-section');
         const navBtns = document.querySelectorAll('.cat-btn');
         window.addEventListener('scroll', () => {
             let current = '';
-            sections.forEach(sec => { if (pageYOffset >= sec.offsetTop - 180) { current = sec.getAttribute('id'); } });
+            sections.forEach(sec => { if (pageYOffset >= sec.offsetTop - 160) current = sec.getAttribute('id'); });
             navBtns.forEach((btn, i) => {
                 btn.classList.remove('active');
                 if (menuData[i].id === current) {
@@ -331,37 +541,30 @@
                 }
             });
         });
+
         function scrollToSec(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
 
-        // --- 3. XỬ LÝ POPUP XEM CHI TIẾT ---
+        // Modal
         function openModal(item) {
             document.getElementById('modalName').innerText = item.name;
             document.getElementById('modalDescription').innerText = item.fullDesc;
-            
             const imgEl = document.getElementById('modalHeroPhoto');
             const fallbackEl = document.getElementById('modalEmojiFallback');
-            
             if (item.img) {
-                imgEl.src = item.img;
-                imgEl.style.display = 'block'; 
-                fallbackEl.style.display = 'none'; 
+                imgEl.src = item.img; imgEl.style.display = 'block'; fallbackEl.style.display = 'none';
             } else {
-                imgEl.style.display = 'none'; 
-                fallbackEl.innerText = item.icon; 
-                fallbackEl.style.display = 'block'; 
+                imgEl.style.display = 'none'; fallbackEl.innerText = item.icon; fallbackEl.style.display = 'block';
             }
-            
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('itemModal').classList.add('active');
         }
-
         function closeModal() {
             document.getElementById('modalOverlay').classList.remove('active');
             document.getElementById('itemModal').classList.remove('active');
         }
         document.getElementById('modalOverlay').addEventListener('click', closeModal);
 
-        // --- 4. TÌM KIẾM ---
+        // Search
         function openSearch() {
             document.getElementById('searchOverlay').classList.add('active');
             setTimeout(() => document.getElementById('searchInput').focus(), 100);
@@ -369,26 +572,24 @@
         function closeSearch() {
             document.getElementById('searchOverlay').classList.remove('active');
             document.getElementById('searchInput').value = '';
-            document.getElementById('searchResults').innerHTML = '<div class="search-empty"><i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:12px;opacity:0.2;"></i>Nhập tên món bạn muốn tìm</div>';
+            document.getElementById('searchResults').innerHTML = '<div class="search-empty"><i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.2;"></i>Nhập tên món bạn muốn tìm</div>';
         }
         function doSearch() {
             const q = document.getElementById('searchInput').value.trim().toLowerCase();
             const container = document.getElementById('searchResults');
-            if (!q) { closeSearch(); document.getElementById('searchOverlay').classList.add('active'); return; }
+            if (!q) { container.innerHTML = '<div class="search-empty"><i class="fas fa-search" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.2;"></i>Nhập tên món bạn muốn tìm</div>'; return; }
             let hits = [];
-            menuData.forEach(sec => {
-                sec.items.forEach(item => {
-                    if (item.name.toLowerCase().includes(q) || item.shortDesc.toLowerCase().includes(q))
-                        hits.push({ ...item, cat: sec.title });
-                });
-            });
-            if (hits.length === 0) {
+            menuData.forEach(sec => sec.items.forEach(item => {
+                if (item.name.toLowerCase().includes(q) || item.shortDesc.toLowerCase().includes(q))
+                    hits.push({ ...item, cat: sec.icon + ' ' + sec.title });
+            }));
+            if (!hits.length) {
                 container.innerHTML = '<div class="search-empty">😕 Không tìm thấy món phù hợp</div>';
             } else {
                 container.innerHTML = hits.map(h => `
                     <div class="search-hit" onclick="closeSearch();openModal(${JSON.stringify(h).replace(/"/g,'&quot;')})">
                         <div class="search-hit-icon">${h.icon}</div>
-                        <div class="search-hit-info">
+                        <div>
                             <div class="search-hit-name">${h.name}</div>
                             <div class="search-hit-cat">${h.cat}</div>
                         </div>
