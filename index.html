@@ -3,12 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="color-scheme" content="light">
     <title>Menu Quán</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="menu/icon/la.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
     <style>
         :root {
+            color-scheme: light only;
             --cream: #f5ede0;
             --cream-dark: #ecdcc8;
             --brown: #5c3d1e;
@@ -21,6 +26,26 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        /* Buộc luôn hiển thị giao diện sáng dù trình duyệt dùng dark mode */
+        @media (prefers-color-scheme: dark) {
+            html { filter: none !important; background: #f5ede0; }
+        }
+
+        /* Chặn copy văn bản */
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Chặn kéo/tải ảnh */
+        img {
+            -webkit-user-drag: none;
+            user-drag: none;
+            pointer-events: none;
+        }
 
         body {
             font-family: 'Be Vietnam Pro', sans-serif;
@@ -136,13 +161,24 @@
             white-space: nowrap;
             cursor: pointer;
             font-family: 'Be Vietnam Pro', sans-serif;
-            transition: all 0.25s;
+            transition: background 0.4s cubic-bezier(0.34,1.56,0.64,1),
+                        color 0.3s ease,
+                        box-shadow 0.4s ease,
+                        transform 0.4s cubic-bezier(0.34,1.56,0.64,1),
+                        filter 0.2s ease;
+            will-change: transform, filter;
         }
         .cat-btn.active {
             background: var(--brown);
             color: #fff;
             border-color: var(--brown);
-            box-shadow: 0 4px 12px rgba(92,61,30,0.25);
+            box-shadow: 0 4px 18px rgba(92,61,30,0.38);
+            transform: scale(1.09);
+        }
+        .cat-btn.blurring {
+            filter: blur(1.8px) brightness(1.12);
+            transform: scaleX(1.15) scaleY(0.93);
+            transition: filter 0.08s ease, transform 0.08s ease;
         }
 
         /* ===== MENU SECTION ===== */
@@ -224,6 +260,38 @@
         .item-img img { width: 100%; height: 100%; object-fit: cover; display: none; }
         .item-img.has-img .emoji-fallback { display: none; }
         .item-img.has-img img { display: block; }
+
+        /* Lazy load shimmer */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .img-shimmer {
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg, var(--cream-dark) 25%, #f8f0e6 50%, var(--cream-dark) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite linear;
+            border-radius: 11px;
+        }
+        .item-img { position: relative; }
+        .item-img img.lazy { opacity: 0; transition: opacity 0.4s ease; }
+        .item-img img.loaded { opacity: 1; }
+        .item-img img.lazy.loaded ~ .img-shimmer,
+        .item-img.shimmer-done .img-shimmer { display: none; }
+
+        /* Modal hero shimmer */
+        .modal-hero { position: relative; }
+        .modal-hero-shimmer {
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg, var(--cream-dark) 25%, #f8f0e6 50%, var(--cream-dark) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.4s infinite linear;
+            z-index: 2;
+            transition: opacity 0.3s ease;
+        }
+        .modal-hero-shimmer.hidden { opacity: 0; pointer-events: none; }
+        #modalHeroPhoto { position: relative; z-index: 1; opacity: 0; transition: opacity 0.4s ease; }
+        #modalHeroPhoto.loaded { opacity: 1; }
 
         .item-info { flex: 1; min-height: 90px; display: flex; flex-direction: column; justify-content: space-between; }
         .item-name {
@@ -314,6 +382,7 @@
             content: '';
             position: absolute; bottom: 0; left: 0; right: 0; height: 80px;
             background: linear-gradient(to top, var(--cream), transparent);
+            z-index: 3;
         }
 
         .modal-body { padding: 24px 24px 10px; }
@@ -332,6 +401,7 @@
             font-size: 0.95rem;
             color: var(--text-sub);
             line-height: 1.75;
+            white-space: pre-line; /* Giúp hiển thị ngắt dòng của danh sách nguyên liệu */
         }
 
         /* ===== SEARCH OVERLAY ===== */
@@ -410,6 +480,7 @@
     <div class="modal-content" id="itemModal">
         <div class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></div>
         <div class="modal-hero">
+            <div class="modal-hero-shimmer" id="modalHeroShimmer" style="display:none"></div>
             <img src="" id="modalHeroPhoto" alt="" />
             <div class="modal-emoji-fallback" id="modalEmojiFallback">☕</div>
         </div>
@@ -439,50 +510,60 @@
     </div>
 
     <script>
+        // Chặn chuột phải (context menu) để tránh save ảnh / copy
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+
+        // Chặn phím tắt copy (Ctrl+C / Ctrl+A / Ctrl+S)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && ['c','a','s','u'].includes(e.key.toLowerCase())) {
+                e.preventDefault(); return false;
+            }
+        });
+
         const menuData = [
             { id: 'cafe', title: 'Cafe', icon: '☕', items: [
-                { name: 'Đen đá / nóng', price: 20000, icon: '☕', shortDesc: 'Cà phê nguyên chất, đậm vị.', fullDesc: 'Hương vị cà phê nguyên bản, rang xay mộc mạc mang đến sự tỉnh táo tức thì. Phù hợp cho những ai yêu thích vị đắng truyền thống đặc trưng của hạt Robusta.', img: 'menu/den_da.png' },
-                { name: 'Nâu đá / nóng', price: 25000, icon: '☕', shortDesc: 'Cà phê hòa quyện sữa béo.', fullDesc: 'Sự kết hợp hoàn hảo giữa cốt cà phê pha phin thơm nồng và lớp sữa đặc béo ngậy. Thức uống kinh điển đậm đà truyền thống.', img: 'menu/nau_da.png' },
-                { name: 'Bạc xỉu', price: 30000, icon: '🥛', shortDesc: 'Sữa tươi thơm béo, ít cà phê.', fullDesc: 'Nhiều sữa béo hơn, chỉ điểm một chút cà phê cốt, thích hợp cho người yêu vị ngọt dịu và hương thơm cà phê nhẹ nhàng tinh tế.', img: '' },
-                { name: 'Cà phê muối', price: 30000, icon: '🧂', shortDesc: 'Vị mặn ngọt béo độc đáo.', fullDesc: 'Lớp kem mặn béo ngậy mịn màng phía trên hòa quyện cùng vị đắng nhẹ của cà phê bên dưới tạo nên một trải nghiệm vị giác bùng nổ.', img: '' },
-                { name: 'Cà phê cốt dừa', price: 30000, icon: '🥥', shortDesc: 'Cà phê pha cốt dừa xay đá.', fullDesc: 'Cốt dừa được xay mịn với đá tạo độ xốp mượt, kết hợp với dòng cà phê đậm đà. Thức uống lạ miệng, mát lạnh và thơm ngậy.', img: '' }
+                { name: 'Đen đá / nóng', price: 20000, icon: '☕', shortDesc: 'Cà phê nguyên chất, đậm vị.', fullDesc: 'Hương vị cà phê nguyên bản, rang xay mộc mạc mang đến sự tỉnh táo tức thì. Phù hợp cho những ai yêu thích vị đắng truyền thống đặc trưng của hạt Robusta.\n\n🌿 Nguyên liệu chính:\n- Hạt cà phê Robusta rang mộc nguyên chất\n- Nước tinh khiết đun sôi\n- Đường phèn/đường cát (tuỳ chọn)', img: 'menu/den_da.webp' },
+                { name: 'Nâu đá / nóng', price: 25000, icon: '☕', shortDesc: 'Cà phê hòa quyện sữa béo.', fullDesc: 'Sự kết hợp hoàn hảo giữa cốt cà phê pha phin thơm nồng và lớp sữa đặc béo ngậy. Thức uống kinh điển đậm đà của người Việt.\n\n🌿 Nguyên liệu chính:\n- Cốt cà phê Robusta pha phin đậm đặc\n- Sữa đặc có đường hảo hạng\n- Đá viên tinh khiết', img: 'menu/nau_da.webp' },
+                { name: 'Bạc xỉu', price: 30000, icon: '🥛', shortDesc: 'Sữa tươi thơm béo, ít cà phê.', fullDesc: 'Nhiều sữa béo hơn, chỉ điểm một chút cà phê cốt, thích hợp cho người yêu vị ngọt dịu và hương thơm cà phê nhẹ nhàng tinh tế.\n\n🌿 Nguyên liệu chính:\n- Sữa tươi nguyên chất thanh trùng\n- Sữa đặc béo ngọt\n- Cốt cà phê phin nguyên chất nhỏ giọt tạo tầng\n- Đá viên', img: 'menu/bac_xiu.webp' },
+                { name: 'Cà phê muối', price: 30000, icon: '🧂', shortDesc: 'Vị mặn ngọt béo độc đáo.', fullDesc: 'Lớp kem mặn béo ngậy mịn màng phía trên hòa quyện cùng vị đắng nhẹ của cà phê bên dưới tạo nên một trải nghiệm vị giác đầy bùng nổ và lôi cuốn.\n\n🌿 Nguyên liệu chính:\n- Cốt cà phê phin đậm vị\n- Kem béo thực vật (Whipping/Topping cream)\n- Muối biển tinh luyện\n- Sữa đặc dịu ngọt', img: 'menu/ca_phe_muoi.webp' },
+                { name: 'Cà phê cốt dừa', price: 30000, icon: '🥥', shortDesc: 'Cà phê pha cốt dừa xay đá.', fullDesc: 'Cốt dừa được xay mịn với đá tạo độ xốp mượt, kết hợp với dòng cà phê đậm đà. Thức uống lạ miệng, mát lạnh và cực kỳ thơm mùi dừa.\n\n🌿 Nguyên liệu chính:\n- Nước cốt dừa tươi béo ngậy\n- Sữa đặc & sữa tươi\n- Cốt cà phê Robusta nguyên chất\n- Đá viên xay tuyết mịn', img: 'menu/ca_phe_cot_dua.webp' }
             ]},
-            { id: 'tra', title: 'Trà', icon: '🍵', items: [
-                { name: 'Trà bí đao hạt chia', price: 15000, icon: '🥤', shortDesc: 'Thanh mát, giải nhiệt tự nhiên.', fullDesc: 'Vị ngọt thanh tự nhiên từ bí đao nguyên chất kết hợp cùng hạt chia bổ dưỡng, mang lại cảm giác nhẹ nhàng, giải nhiệt cơ thể hiệu quả.', img: '' },
-                { name: 'Trà chanh', price: 15000, icon: '🍋‍🟩', shortDesc: 'Chua ngọt sảng khoái.', fullDesc: 'Vị chanh tươi mát hòa quyện cùng cốt trà đen ủ đậm vị, mang lại cảm giác sảng khoái, giải khát tức thì trong những ngày oi bức.', img: '' },
-                { name: 'Trà chanh nha đam', price: 20000, icon: '🪴', shortDesc: 'Trà chanh kèm nha đam giòn.', fullDesc: 'Sự nâng cấp tuyệt vời của trà chanh truyền thống với topping nha đam cắt hạt lựu giòn sần sật nhai cực kỳ vui miệng.', img: '' },
-                { name: 'Trà quất', price: 15000, icon: '🍊', shortDesc: 'Thơm lừng hương quất tươi.', fullDesc: 'Sử dụng quả quất tươi vắt trực tiếp mang lại mùi thơm tinh dầu đặc trưng ở vỏ, vị chua ngọt hài hòa rất dễ chịu.', img: '' },
-                { name: 'Trà quất nha đam', price: 20000, icon: '🪴', shortDesc: 'Quất thơm kèm nha đam thanh mát.', fullDesc: 'Nước cốt quất chua ngọt thơm nồng, nhấn nhá thêm những viên nha đam thanh mát, mọng nước, tạo nên một thức uống cân bằng.', img: '' },
-                { name: 'Trà đào', price: 15000, icon: '🍑', shortDesc: 'Hương vị đào ngọt mọng dịu dàng.', fullDesc: 'Cốt trà thơm nhẹ kết hợp với hương vị đào chín mọng thanh lịch, đem đến cảm giác thư thái ngọt ngào.', img: '' },
-                { name: 'Trà đào cam sả', price: 25000, icon: '🍑', shortDesc: 'Sự kết hợp hoàn hảo kinh điển.', fullDesc: 'Sự hòa quyện tuyệt vời giữa vị đào ngọt mọng, cam tươi chua nhẹ và hương sả nồng ấm kích thích hoàn hảo mọi giác quan.', img: '' },
-                { name: 'Trà xoài chanh leo', price: 25000, icon: '🥭', shortDesc: 'Chua ngọt nhiệt đới bùng nổ.', fullDesc: 'Hương xoài chín thơm ngọt lịm đan xen hoàn hảo với vị chua thanh đặc trưng từ chanh leo tươi nguyên chất, đem lại vị mát sảng khoái.', img: '' },
-                { name: 'Trà mãng cầu', price: 25000, icon: '🍈', shortDesc: 'Vị ngọt dịu chua thanh lạ miệng.', fullDesc: 'Mãng cầu xiêm tươi được dầm vừa chín tới, hòa quyện với nước cốt trà thơm nhẹ tạo nên hương vị chua chua ngọt ngọt cuốn hút khó cưỡng.', img: '' }
+            { id: 'tra', title: 'Trà Lạnh', icon: '🍵', items: [
+                { name: 'Trà bí đao hạt chia', price: 15000, icon: '🫙', shortDesc: 'Mát lành, thanh nhiệt tự nhiên.', fullDesc: 'Nước bí đao thanh nhiệt kết hợp hạt chia giàu chất xơ, thức uống lý tưởng cho những ngày hè oi bức.\n\n🌿 Nguyên liệu chính:\n- Bí đao tươi nấu lấy nước\n- Hạt chia ngâm nở giòn\n- Đường phèn tinh luyện', img: 'menu/pic.webp' },
+                { name: 'Trà chanh', price: 15000, icon: '🍋', shortDesc: 'Chua ngọt sảng khoái.', fullDesc: 'Vị chanh tươi mát hòa quyện cùng cốt trà đen ủ đậm vị, mang lại cảm giác sảng khoái, giải khát tức thì.\n\n🌿 Nguyên liệu chính:\n- Cốt trà xanh hoặc trà đen ủ thơm\n- Nước cốt chanh tươi vắt trong ngày\n- Nước đường phèn tinh luyện\n- Lát chanh tươi trang trí', img: 'menu/tra_chanh.webp' },
+                { name: 'Trà chanh nha đam', price: 20000, icon: '🪴', shortDesc: 'Trà chanh kèm nha đam giòn.', fullDesc: 'Sự nâng cấp tuyệt vời của trà chanh truyền thống với topping nha đam cắt lựu giòn sần sật nhai cực vui miệng.\n\n🌿 Nguyên liệu chính:\n- Cốt trà chanh tươi mát\n- Topping nha đam giòn ngọt cắt hạt lựu chín ngâm đường\n- Nước cốt chanh và đường phèn thanh nhẹ', img: '' },
+                { name: 'Trà quất', price: 15000, icon: '🍊', shortDesc: 'Thơm lừng hương quất tươi.', fullDesc: 'Sử dụng quả quất tươi vắt trực tiếp mang lại mùi thơm tinh dầu đặc trưng ở vỏ, vị chua ngọt hài hòa dễ chịu.\n\n🌿 Nguyên liệu chính:\n- Cốt trà ủ mộc thanh nhẹ\n- Quả tắc (quất) tươi vắt lấy nước cốt thơm vỏ\n- Nước đường tinh luyện\n- Quả tắc bổ đôi trang trí', img: '' },
+                { name: 'Trà quất nha đam', price: 20000, icon: '🍊', shortDesc: 'Quất tươi kèm nha đam mát lạnh.', fullDesc: 'Trà quất thơm chua kết hợp nha đam giòn ngọt tạo nên thức uống vừa sảng khoái vừa tốt cho sức khỏe.\n\n🌿 Nguyên liệu chính:\n- Cốt trà quất tươi\n- Nha đam cắt hạt lựu ngâm đường phèn\n- Đá viên mát lạnh', img: '' },
+                { name: 'Trà đào', price: 15000, icon: '🍑', shortDesc: 'Đào ngọt thơm mát dịu.', fullDesc: 'Trà đào thanh nhẹ với vị ngọt tự nhiên của đào chín, thức uống mát lạnh hoàn hảo cho ngày hè.\n\n🌿 Nguyên liệu chính:\n- Cốt hồng trà nhẹ nhàng\n- Đào miếng ngâm ngọt\n- Nước đường phèn thanh mát', img: '' },
+                { name: 'Trà đào cam xả', price: 25000, icon: '🍑', shortDesc: 'Đào, cam, sả hòa quyện hoàn hảo.', fullDesc: 'Sự hòa quyện tuyệt vời giữa vị đào ngọt mọng, cam tươi chua nhẹ và hương sả nồng ấm kích thích hoàn hảo mọi giác quan.\n\n🌿 Nguyên liệu chính:\n- Cốt hồng trà đậm vị\n- Đào miếng ngâm giòn ngọt\n- Cam vàng tươi cắt lát và vắt nước\n- Sả cây tươi đun lấy nước cốt thơm nồng\n- Sốt đào đặc sánh', img: '' },
+                { name: 'Trà xoài chanh leo', price: 25000, icon: '🥭', shortDesc: 'Xoài chín hòa quyện chanh leo chua ngọt.', fullDesc: 'Vị xoài chín ngọt thanh kết hợp chanh leo chua nhẹ tạo nên thức uống nhiệt đới độc đáo, thơm ngát và hấp dẫn.\n\n🌿 Nguyên liệu chính:\n- Cốt trà thanh nhẹ\n- Xoài chín cắt miếng hoặc xay nhuyễn\n- Cơm chanh leo tươi chua ngọt\n- Nước đường phèn điều vị', img: '' },
+                { name: 'Trà mãng cầu', price: 25000, icon: '🍈', shortDesc: 'Mãng cầu thơm ngọt dịu dàng.', fullDesc: 'Hương vị mãng cầu đặc trưng thơm ngọt dịu dàng, thức uống lạ miệng và bổ dưỡng.\n\n🌿 Nguyên liệu chính:\n- Cốt trà thanh nhẹ\n- Mãng cầu chín xay hoặc dầm\n- Đường phèn điều vị thanh tự nhiên', img: '' }
             ]},
             { id: 'tranong', title: 'Trà Nóng', icon: '🫖', items: [
-                { name: 'Trà gừng táo đỏ', price: 25000, icon: '🫖', shortDesc: 'Ấm áp, bổ dưỡng và thư giãn.', fullDesc: 'Sự kết hợp hoàn hảo giữa vị cay ấm nồng của gừng già tươi và vị ngọt thanh đậm đà của táo đỏ, giúp giữ ấm và nuôi dưỡng cơ thể tốt.', img: '' },
-                { name: 'Trà gừng chanh sả', price: 25000, icon: '🫖', shortDesc: 'Thơm nồng sả gừng, giải cảm.', fullDesc: 'Hương sả thơm ngút ngàn hòa cùng gừng ấm áp và chút vị chua thanh dịu từ chanh tươi, mang lại sự nhẹ nhàng thư thái cho tinh thần.', img: '' },
-                { name: 'Trà đào cam sả nóng', price: 25000, icon: '🍑', shortDesc: 'Đào cam sả phiên bản ấm áp.', fullDesc: 'Thức uống kinh điển được phục vụ ở phiên bản ấm nóng, làm dậy mùi tinh dầu sả tươi và cam mọng, giúp thư giãn cổ họng.', img: '' },
-                { name: 'Trà quất mật ong', price: 25000, icon: '🍯', shortDesc: 'Dịu giọng, ngọt ngào thơm ngát.', fullDesc: 'Sự hòa quyện tinh tế giữa mật ong rừng tự nhiên ngọt hậu và nước cốt quất tươi thơm lừng, một thức uống vô cùng ấm áp tốt cho sức khỏe.', img: '' }
+                { name: 'Trà gừng táo đỏ', price: 25000, icon: '🍎', shortDesc: 'Ấm nồng, bổ dưỡng.', fullDesc: 'Sự kết hợp giữa gừng tươi cay ấm và táo đỏ ngọt bùi, thức uống giữ ấm cơ thể và tăng cường sức đề kháng.\n\n🌿 Nguyên liệu chính:\n- Gừng tươi thái lát đun sôi\n- Táo đỏ khô hầm mềm\n- Đường phèn điều vị', img: '' },
+                { name: 'Trà gừng chanh xả', price: 25000, icon: '🍋', shortDesc: 'Cay ấm, thơm nồng, sảng khoái.', fullDesc: 'Gừng cay ấm kết hợp chanh tươi chua nhẹ và hương sả thơm nồng, thức uống hoàn hảo để xua tan cảm lạnh.\n\n🌿 Nguyên liệu chính:\n- Gừng tươi thái lát\n- Nước cốt chanh tươi\n- Sả cây tươi đun lấy nước\n- Mật ong hoặc đường phèn điều vị', img: '' },
+                { name: 'Trà đào cam xả nóng', price: 25000, icon: '🍑', shortDesc: 'Trà đào cam xả thưởng thức nóng.', fullDesc: 'Phiên bản nóng của trà đào cam xả đình đám, thơm nồng và ấm áp hơn, phù hợp cho những ngày se lạnh.\n\n🌿 Nguyên liệu chính:\n- Cốt hồng trà đậm vị\n- Đào ngâm ngọt\n- Cam tươi\n- Sả cây thơm nồng', img: '' },
+                { name: 'Trà quất mật ong', price: 25000, icon: '🍯', shortDesc: 'Quất tươi và mật ong nguyên chất.', fullDesc: 'Vị chua thanh của quất tươi hòa quyện mật ong nguyên chất ngọt dịu, thức uống tốt cho cổ họng và sức đề kháng.\n\n🌿 Nguyên liệu chính:\n- Quất tươi vắt lấy nước cốt\n- Mật ong nguyên chất\n- Nước nóng vừa đủ', img: '' }
             ]},
             { id: 'nuocep', title: 'Nước Ép', icon: '🥤', items: [
-                { name: 'Nước ép dứa', price: 25000, icon: '🍍', shortDesc: 'Chua ngọt thanh mát tự nhiên.', fullDesc: 'Nước ép nguyên chất từ quả dứa chín mọng, cung cấp nguồn năng lượng tươi mát dồi dào và nhiều vitamin tự nhiên.', img: '' },
-                { name: 'Nước ép cam', price: 25000, icon: '🍊', shortDesc: 'Giàu Vitamin C nguyên chất.', fullDesc: 'Cam mọng nước vắt trực tiếp, giữ trọn vẹn vị chua ngọt tự nhiên tinh tế, giúp tăng cường đề kháng và làm sáng da.', img: '' },
-                { name: 'Nước ép dưa hấu', price: 25000, icon: '🍉', shortDesc: 'Giải nhiệt thanh mát ngày hè.', fullDesc: 'Nước ép dưa hấu đỏ au tự nhiên, mát lạnh ngọt lịm tê đầu lưỡi. Thức uống hoàn hảo để đánh bay cơn khát oi bức.', img: '' },
-                { name: 'Nước ép cà rốt + cam', price: 30000, icon: '🥕', shortDesc: 'Sáng mắt đẹp da mỗi ngày.', fullDesc: 'Sự kết hợp hoàn hảo cung cấp lượng lớn Vitamin A và C cho cơ thể. Rất tốt cho sức khỏe tổng thể, giúp sáng mắt và làm đẹp da.', img: '' },
-                { name: 'Nước ép cà rốt + dứa', price: 30000, icon: '🥕', shortDesc: 'Hương vị hòa quyện ngọt mát.', fullDesc: 'Vị chua ngọt dịu của dứa tươi khéo léo làm át đi mùi hăng nhẹ của cà rốt tươi, tạo ra một ly nước ép hỗn hợp vô cùng bổ dưỡng.', img: '' }
+                { name: 'Nước ép dứa', price: 25000, icon: '🍍', shortDesc: 'Dứa tươi ngọt lịm, mát lạnh.', fullDesc: 'Dứa mật chín vàng ép nguyên chất, vị ngọt chua dịu tự nhiên, giàu enzyme hỗ trợ tiêu hóa.\n\n🌿 Nguyên liệu chính:\n- Dứa mật chín vàng ngọt lịm\n- Ép nguyên chất không pha tạp\n- Một chút muối tinh tôn vị ngọt', img: '' },
+                { name: 'Nước ép cam', price: 25000, icon: '🍊', shortDesc: 'Cam tươi nguyên chất giàu vitamin C.', fullDesc: 'Cam sành tươi vắt nguyên chất, vị ngọt thanh tự nhiên, giàu vitamin C tăng cường đề kháng.\n\n🌿 Nguyên liệu chính:\n- Cam sành/cam vàng mọng nước vắt lấy cốt\n- Ép nguyên chất không thêm đường\n- Đá viên mát lạnh', img: '' },
+                { name: 'Nước ép dưa hấu', price: 25000, icon: '🍉', shortDesc: 'Giải nhiệt mùa hè.', fullDesc: 'Nước ép dưa hấu đỏ au tự nhiên, mát lạnh ngọt lịm tê đầu lưỡi. Thức uống hoàn hảo để đánh bay cơn khát oi bức.\n\n🌿 Nguyên liệu chính:\n- Dưa hấu đỏ tươi nguyên quả ép lấy nước\n- Một chút đường phèn lỏng (tuỳ chọn độ ngọt)\n- Lát dưa hấu tươi trang trí', img: '' },
+                { name: 'Nước ép cà rốt + cam', price: 30000, icon: '🥕', shortDesc: 'Vitamin A và C dồi dào, sáng da.', fullDesc: 'Sự kết hợp hoàn hảo cung cấp lượng lớn Vitamin A và C cho cơ thể. Rất tốt cho sức khỏe tổng thể, giúp sáng mắt và đẹp da.\n\n🌿 Nguyên liệu chính:\n- Cam sành/cam vàng mọng nước vắt lấy cốt\n- Cà rốt tươi nguyên củ ép chậm\n- Nước đường phèn điều vị nhẹ nhàng', img: '' },
+                { name: 'Nước ép cà rốt + dứa', price: 30000, icon: '🥕', shortDesc: 'Hương vị hòa quyện, dễ uống.', fullDesc: 'Vị chua ngọt dịu của dứa tươi khéo léo làm át đi mùi hăng nhẹ của cà rốt, tạo ra một ly nước ép hỗn hợp cực kỳ dễ uống.\n\n🌿 Nguyên liệu chính:\n- Dứa mật chín vàng ngọt lịm\n- Cà rốt tươi Đà Lạt giàu Vitamin A\n- Ép nguyên chất bằng công nghệ ép chậm giữ trọn dưỡng chất', img: '' }
             ]},
             { id: 'trasua', title: 'Trà Sữa', icon: '🧋', items: [
-                { name: 'Trà sữa gạo rang', price: 20000, icon: '🌾', shortDesc: 'Hương gạo rang bùi béo mộc mạc.', fullDesc: 'Dòng trà sữa độc đáo mang đậm hương thơm bùi bùi đặc trưng của gạo rang, hậu vị ngọt thanh nhẹ dịu không gây ngấy.', img: '' },
-                { name: 'Trà sữa truyền thống', price: 20000, icon: '🧋', shortDesc: 'Hương vị trà sữa kinh điển.', fullDesc: 'Cốt trà đen đậm đặc kết hợp hoàn hảo cùng bột sữa cao cấp nhập khẩu. Vị trà rõ nét, hậu vị thơm béo hài hòa tròn trịa.', img: '' },
-                { name: 'Trà sữa matcha kem', price: 25000, icon: '🍵', shortDesc: 'Matcha kem béo ngậy mịn màng.', fullDesc: 'Vị trà xanh matcha chát nhẹ bùi bùi hòa với sữa béo, phủ phía trên là một lớp kem béo mịn màng đầy lôi cuốn.', img: '' },
-                { name: 'Sữa tươi trân châu đường đen', price: 25000, icon: '🥛', shortDesc: 'Sữa tươi béo thanh, trân châu dai.', fullDesc: 'Sữa tươi nguyên chất thanh mát hòa cùng những hàng trân châu đen dẻo dai được nấu đượm với sốt đường mật mía đậm đặc.', img: '' },
-                { name: 'Matcha latte', price: 30000, icon: '🍵', shortDesc: 'Matcha nguyên chất và sữa tươi.', fullDesc: 'Sự kết hợp phân tầng đẹp mắt giữa sữa tươi nguyên chất thanh trùng và lớp trà matcha Nhật Bản thơm nồng béo ngậy.', img: '' }
+                { name: 'Trà sữa gạo rang', price: 20000, icon: '🧋', shortDesc: 'Hương gạo rang thơm lừng đặc biệt.', fullDesc: 'Trà sữa với cốt gạo rang vàng ươm, mang hương thơm bùi dịu đặc trưng, vị ngọt béo hài hòa rất lạ miệng và quyến rũ.\n\n🌿 Nguyên liệu chính:\n- Gạo rang vàng ủ lấy cốt thơm\n- Bột kem sữa béo cao cấp\n- Đường phèn điều vị', img: '' },
+                { name: 'Trà sữa truyền thống', price: 20000, icon: '🧋', shortDesc: 'Hương vị kinh điển không lỗi thời.', fullDesc: 'Cốt trà đen đậm đặc kết hợp hoàn hảo cùng bột sữa cao cấp nhập khẩu. Vị trà rõ nét, hậu vị thơm béo hài hòa tròn trịa.\n\n🌿 Nguyên liệu chính:\n- Cốt hồng trà/trà đen sấy đậm vị trà\n- Bột kem béo thực vật nhập khẩu (Non-dairy creamer)\n- Đường phèn thanh mát đem lại hậu vị sâu', img: '' },
+                { name: 'Trà sữa matcha kem', price: 25000, icon: '🍵', shortDesc: 'Matcha phủ lớp kem béo mịn.', fullDesc: 'Trà sữa matcha đậm vị phủ trên lớp kem béo ngậy thơm mịn, sự kết hợp chuẩn vị giữa đắng nhẹ và béo ngậy.\n\n🌿 Nguyên liệu chính:\n- Cốt lục trà matcha Nhật Bản\n- Bột sữa béo chuyên dụng\n- Lớp kem tươi đánh mịn phủ mặt', img: '' },
+                { name: 'Sữa tươi ccdđ', price: 25000, icon: '🥛', shortDesc: 'Sữa tươi cà chua dưa đỏ.', fullDesc: 'Thức uống sữa tươi kết hợp cà chua và dưa hấu đỏ tươi, vị ngọt mát tự nhiên, màu sắc bắt mắt và cực kỳ bổ dưỡng.\n\n🌿 Nguyên liệu chính:\n- Sữa tươi thanh trùng béo nhẹ\n- Cà chua tươi và dưa hấu đỏ\n- Đường phèn điều vị', img: '' },
+                { name: 'Matcha latte', price: 30000, icon: '🍵', shortDesc: 'Matcha Nhật Bản và sữa tươi phân tầng.', fullDesc: 'Sự kết hợp phân tầng đẹp mắt giữa sữa tươi nguyên chất thanh trùng và lớp trà matcha Nhật Bản thơm nồng, không dùng bột béo.\n\n🌿 Nguyên liệu chính:\n- Bột trà xanh Matcha Uji Nhật Bản nguyên chất cao cấp\n- Sữa tươi thanh trùng không đường\n- Nước đường phèn lỏng điều vị', img: '' }
             ]},
-            { id: 'suachua', title: 'Sữa Chua', icon: '🥛', items: [
-                { name: 'Sữa chua đánh đá', price: 20000, icon: '🥛', shortDesc: 'Mát lạnh, chua ngọt hài hòa.', fullDesc: 'Sữa chua lên men tự nhiên kết hợp cùng sữa đặc béo ngậy, xay mịn cùng đá mang lại cảm giác mát mẻ, giải khát tức thì.', img: '' },
-                { name: 'Sữa chua trái cây', price: 25000, icon: '🍓', shortDesc: 'Thơm ngon bổ dưỡng cùng trái cây.', fullDesc: 'Sữa chua mềm mịn, chua dịu ăn kèm với các loại trái cây tươi cắt nhỏ, cung cấp nhiều vitamin phong phú cho làn da.', img: '' },
-                { name: 'Sữa chua nha đam', price: 25000, icon: '🪴', shortDesc: 'Sữa chua mịn, nha đam giòn thanh.', fullDesc: 'Sự kết hợp hoàn hảo giữa sữa chua lên men truyền thống và những viên nha đam giòn ngọt mát lành, cực kỳ tốt cho hệ tiêu hóa.', img: '' },
-                { name: 'Sữa chua xoài', price: 25000, icon: '🥭', shortDesc: 'Sốt xoài chín thơm ngọt quyến rũ.', fullDesc: 'Lớp sốt xoài chín tự nhiên vàng ươm, ngọt ngào hòa quyện cùng vị chua dịu tinh tế của sữa chua tạo nên sức hút khó cưỡng.', img: '' }
+            { id: 'suachua', title: 'Sữa Chua', icon: '🍨', items: [
+                { name: 'Sữa chua đánh đá', price: 20000, icon: '🍧', shortDesc: 'Sữa chua mịn mát lạnh tan chảy.', fullDesc: 'Sữa chua nguyên chất đánh bông cùng đá bào tạo độ mịn mát đặc trưng, vị chua ngọt hài hòa, ăn là ghiền.\n\n🌿 Nguyên liệu chính:\n- Sữa chua nguyên chất tự làm\n- Đá bào mịn\n- Sữa đặc điều vị ngọt béo', img: '' },
+                { name: 'Sữa chua trái cây', price: 25000, icon: '🍓', shortDesc: 'Sữa chua kèm trái cây tươi theo mùa.', fullDesc: 'Sữa chua béo mịn phủ đầy trái cây tươi đa màu sắc, vừa ngon mắt vừa bổ dưỡng, thích hợp cho mọi lứa tuổi.\n\n🌿 Nguyên liệu chính:\n- Sữa chua nguyên chất béo nhẹ\n- Trái cây tươi theo mùa (dâu, kiwi, xoài, nho...)\n- Sữa đặc rưới mặt', img: '' },
+                { name: 'Sữa chua nha đam', price: 25000, icon: '🪴', shortDesc: 'Sữa chua kèm nha đam giòn mát.', fullDesc: 'Sữa chua mịn béo kết hợp nha đam giòn ngọt mát lạnh, thức uống giải nhiệt tuyệt vời tốt cho tiêu hóa.\n\n🌿 Nguyên liệu chính:\n- Sữa chua nguyên chất\n- Nha đam cắt hạt lựu ngâm đường\n- Sữa đặc và đá viên', img: '' },
+                { name: 'Sữa chua xoài', price: 25000, icon: '🥭', shortDesc: 'Xoài chín ngọt hòa quyện sữa chua.', fullDesc: 'Xoài chín ngọt thơm kết hợp sữa chua béo mịn tạo nên thức uống nhiệt đới hấp dẫn, vị ngọt chua tự nhiên.\n\n🌿 Nguyên liệu chính:\n- Xoài cát chín ngọt thái miếng\n- Sữa chua nguyên chất béo nhẹ\n- Sữa đặc điều vị', img: '' }
             ]}
         ];
 
@@ -508,11 +589,15 @@
             sec.items.forEach(item => {
                 const hasImg = item.img ? 'has-img' : '';
                 const itemStr = JSON.stringify(item).replace(/"/g, '&quot;');
+                // Thumbnail: add ?w=180 hint for future CDN; use data-src for lazy load
+                const thumbSrc = item.img ? item.img : '';
+                const shimmerHtml = item.img ? '<div class="img-shimmer"></div>' : '';
                 html += `
                 <div class="menu-item" onclick="openModal(${itemStr})">
                     <div class="item-img ${hasImg}">
                         <span class="emoji-fallback">${item.icon}</span>
-                        <img src="${item.img||''}" alt="${item.name}" />
+                        ${item.img ? `<img class="lazy" data-src="${thumbSrc}" alt="${item.name}" />` : ''}
+                        ${shimmerHtml}
                     </div>
                     <div class="item-info">
                         <div>
@@ -531,40 +616,141 @@
             menuContainer.innerHTML += html;
         });
 
-        // Scroll spy
+        // Scroll spy — smooth + motion blur
         const sections = document.querySelectorAll('.menu-section');
         const navBtns = document.querySelectorAll('.cat-btn');
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(sec => { if (pageYOffset >= sec.offsetTop - 160) current = sec.getAttribute('id'); });
+        let activeId = '';
+        let scrollRaf = null;
+        let blurTimer = null;
+        let navScrolling = false;
+        let navScrollTimer = null;
+
+        function smoothScrollNav(btn) {
+            const nav = document.querySelector('.category-nav');
+            const navRect = nav.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+            const targetLeft = nav.scrollLeft + btnRect.left - navRect.left - (navRect.width / 2) + (btnRect.width / 2);
+            const start = nav.scrollLeft;
+            const dist = targetLeft - start;
+            const dur = 500;
+            let startTime = null;
+
+            function easeInOutQuart(t) {
+                return t < 0.5 ? 8*t*t*t*t : 1 - 8*(--t)*t*t*t;
+            }
+
+            function step(ts) {
+                if (!startTime) startTime = ts;
+                const progress = Math.min((ts - startTime) / dur, 1);
+                nav.scrollLeft = start + dist * easeInOutQuart(progress);
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        function setActiveBtn(id) {
+            if (id === activeId) return;
+            activeId = id;
+
             navBtns.forEach((btn, i) => {
-                btn.classList.remove('active');
-                if (menuData[i].id === current) {
-                    btn.classList.add('active');
-                    btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                const isActive = menuData[i].id === id;
+                if (isActive && !btn.classList.contains('active')) {
+                    // Motion blur flash before activating
+                    btn.classList.add('blurring');
+                    clearTimeout(blurTimer);
+                    blurTimer = setTimeout(() => {
+                        btn.classList.remove('blurring');
+                        btn.classList.add('active');
+                        smoothScrollNav(btn);
+                    }, 90);
+                } else if (!isActive) {
+                    btn.classList.remove('active', 'blurring');
                 }
             });
-        });
+        }
 
-        function scrollToSec(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+        window.addEventListener('scroll', () => {
+            if (scrollRaf) cancelAnimationFrame(scrollRaf);
+            scrollRaf = requestAnimationFrame(() => {
+                let current = '';
+                const offset = window.innerHeight * 0.3;
+                sections.forEach(sec => {
+                    const top = sec.getBoundingClientRect().top;
+                    if (top <= offset) current = sec.getAttribute('id');
+                });
+                if (current) setActiveBtn(current);
+            });
+        }, { passive: true });
 
-        // Modal
+        function scrollToSec(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const y = el.getBoundingClientRect().top + window.scrollY - 130;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+
+        // Lazy load thumbnail via IntersectionObserver
+        function initLazyImages() {
+            const lazyImgs = document.querySelectorAll('img.lazy');
+            if (!lazyImgs.length) return;
+            const io = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.onload = () => {
+                        img.classList.add('loaded');
+                        img.closest('.item-img').classList.add('shimmer-done');
+                    };
+                    obs.unobserve(img);
+                });
+            }, { rootMargin: '200px 0px' }); // pre-load 200px trước khi vào viewport
+            lazyImgs.forEach(img => io.observe(img));
+        }
+        initLazyImages();
+
+        // Modal — load full-res ảnh CHỈ KHI bấm xem
         function openModal(item) {
             document.getElementById('modalName').innerText = item.name;
             document.getElementById('modalDescription').innerText = item.fullDesc;
             const imgEl = document.getElementById('modalHeroPhoto');
             const fallbackEl = document.getElementById('modalEmojiFallback');
+            let shimmerEl = document.getElementById('modalHeroShimmer');
+
+            imgEl.classList.remove('loaded');
+            imgEl.src = '';
+
             if (item.img) {
-                imgEl.src = item.img; imgEl.style.display = 'block'; fallbackEl.style.display = 'none';
+                imgEl.style.display = 'block';
+                fallbackEl.style.display = 'none';
+                if (shimmerEl) { shimmerEl.style.display = 'block'; shimmerEl.classList.remove('hidden'); }
+
+                // Load full-res ảnh đúng lúc bấm
+                const fullImg = new Image();
+                fullImg.onload = () => {
+                    imgEl.src = fullImg.src;
+                    imgEl.classList.add('loaded');
+                    if (shimmerEl) shimmerEl.classList.add('hidden');
+                };
+                fullImg.src = item.img;
             } else {
-                imgEl.style.display = 'none'; fallbackEl.innerText = item.icon; fallbackEl.style.display = 'block';
+                imgEl.style.display = 'none';
+                fallbackEl.innerText = item.icon;
+                fallbackEl.style.display = 'block';
+                if (shimmerEl) shimmerEl.style.display = 'none';
             }
+
             document.getElementById('modalOverlay').classList.add('active');
             document.getElementById('itemModal').classList.add('active');
         }
         function closeModal() {
             document.getElementById('modalOverlay').classList.remove('active');
             document.getElementById('itemModal').classList.remove('active');
+            // Reset ảnh để tránh flash ảnh cũ lần sau
+            setTimeout(() => {
+                const imgEl = document.getElementById('modalHeroPhoto');
+                imgEl.src = ''; imgEl.classList.remove('loaded');
+            }, 350);
         }
         document.getElementById('modalOverlay').addEventListener('click', closeModal);
 
